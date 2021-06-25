@@ -3,13 +3,9 @@
  */
 package pl.futurecollars.invoicing
 
-import spock.lang.Shared
 import spock.lang.Specification
 
 class AppTest extends Specification {
-
-    @Shared
-            app
 
     def "application has a greeting"() {
         setup:
@@ -21,7 +17,6 @@ class AppTest extends Specification {
         then:
         result != null
     }
-
 
     def "application prints to console"() {
         setup:
