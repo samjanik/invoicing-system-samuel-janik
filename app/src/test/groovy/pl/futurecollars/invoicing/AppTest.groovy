@@ -3,13 +3,9 @@
  */
 package pl.futurecollars.invoicing
 
-import spock.lang.Shared
 import spock.lang.Specification
 
 class AppTest extends Specification {
-
-    @Shared app
-
     def "application has a greeting"() {
         setup:
         def app = new App()
@@ -19,21 +15,5 @@ class AppTest extends Specification {
 
         then:
         result != null
-    }
-
-    def "application prints to console"() {
-        setup:
-        def app = new App()
-
-        when: "print something to console"
-        def buffer = new ByteArrayOutputStream()
-        System.out = new PrintStream(buffer)
-
-        and:
-        app.main()
-
-        then: "should print Hello World"
-        buffer.toString() == "Hello World!\r\n"
-
     }
 }
