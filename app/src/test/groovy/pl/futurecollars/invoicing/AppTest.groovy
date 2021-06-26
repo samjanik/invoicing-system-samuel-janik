@@ -31,6 +31,5 @@ class AppTest extends Specification {
 
         then: "should print Hello World"
         buffer.toString() == "Hello World!\r\n"
-
     }
 }
