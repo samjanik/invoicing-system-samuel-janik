@@ -3,7 +3,7 @@ package pl.futurecollars.invoicing.service
 import pl.futurecollars.invoicing.db.Database
 import spock.lang.Specification
 
-import static pl.futurecollars.invoicing.TestHelpers.invoice
+import static pl.futurecollars.invoicing.helpers.TestHelpers.invoice
 
 class InvoiceServiceUnitTest extends Specification {
 
@@ -23,6 +23,7 @@ class InvoiceServiceUnitTest extends Specification {
         then:
         1 * database.save(invoice)
     }
+
     def "calling delete() should delegate to database delete() method"() {
         given:
         def invoiceId = 123
@@ -31,6 +32,7 @@ class InvoiceServiceUnitTest extends Specification {
         then:
         1 * database.delete(invoiceId)
     }
+
     def "calling getById() should delegate to database getById() method"() {
         given:
         def invoiceId = 321
@@ -39,12 +41,14 @@ class InvoiceServiceUnitTest extends Specification {
         then:
         1 * database.getById(invoiceId)
     }
+
     def "calling getAll() should delegate to database getAll() method"() {
         when:
         service.getAll()
         then:
         1 * database.getAll()
     }
+
     def "calling update() should delegate to database update() method"() {
         given:
         def invoice = invoice(1)
