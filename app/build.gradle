@@ -26,8 +26,6 @@ repositories {
 }
 
 dependencies {
-    //implementation 'org.spockframework:spock-core:2.0-M4-groovy-3.0'
-
 
     // Use the latest Groovy version for Spock testing
     testImplementation 'org.codehaus.groovy:groovy:3.0.7'
@@ -65,9 +63,9 @@ jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
-                counter = 'INSTRUCTION'
-                value = 'MISSEDRATIO'
-                maximum = 0.20
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 0.80
             }
         }
 
@@ -75,7 +73,7 @@ jacocoTestCoverageVerification {
             limit {
                 counter = 'LINE'
                 value = 'COVEREDRATIO'
-                minimum = 0.75
+                minimum = 0.80
             }
         }
     }

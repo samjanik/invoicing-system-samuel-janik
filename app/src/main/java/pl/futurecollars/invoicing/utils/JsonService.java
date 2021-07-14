@@ -20,21 +20,15 @@ public class JsonService {
         try {
             return objectMapper.writeValueAsString(invoice);
         } catch (JsonProcessingException e) {
-            System.out.println("Serialization from object to Json string failed");
-            e.printStackTrace();
+            throw new RuntimeException("Failed to serialize object to Json string", e);
         }
-        String emptyString = "";
-        return emptyString;
     }
 
     public Invoice stringToObject(String objectAsString) {
-        Invoice invoice = new Invoice();
         try {
             return objectMapper.readValue(objectAsString, Invoice.class);
         } catch (JsonProcessingException e) {
-            System.out.println("Serialization from Json string to object failed");
-            e.printStackTrace();
-            return invoice;
+            throw new RuntimeException("Failed to serialize and parse Json string to object", e);
         }
     }
 }

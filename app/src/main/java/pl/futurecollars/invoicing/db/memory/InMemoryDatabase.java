@@ -15,6 +15,7 @@ public class InMemoryDatabase implements Database {
 
     @Override
     public int save(Invoice invoice) {
+
         invoice.setId(nextId);
         invoices.put(nextId, invoice);
 
@@ -34,7 +35,6 @@ public class InMemoryDatabase implements Database {
     @Override
     public Optional<Invoice> update(int id, Invoice updatedInvoice) {
         updatedInvoice.setId(id);
-
         return Optional.ofNullable(invoices.put(id, updatedInvoice));
     }
 
