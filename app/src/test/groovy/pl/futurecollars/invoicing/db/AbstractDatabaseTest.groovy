@@ -1,22 +1,18 @@
-package pl.futurecollars.invoicing.db.memory
+package pl.futurecollars.invoicing.db
 
-import pl.futurecollars.invoicing.db.Database
 import pl.futurecollars.invoicing.model.Invoice
 import spock.lang.Specification
 
 import static pl.futurecollars.invoicing.helpers.TestHelpers.invoice
 
-class InMemoryDatabaseTest extends Specification {
+abstract class AbstractDatabaseTest extends Specification {
 
-    private Database database
-    private List<Invoice> invoices
+    List<Invoice> invoices = (1..12).collect { invoice(it) }
+    Database database = getDatabaseInstance()
 
-    def setup() {
-        database = new InMemoryDatabase();
-        invoices = (1..10).collect { invoice(it) }
-    }
+    abstract Database getDatabaseInstance()
 
-    def "should save invoices returning sequential id, invoice should have id set to correct value, getById returns saved invoice"() {
+    def "should save invoices returning sequential id, invoice should have id set to correct value, get by id returns saved invoice"() {
         when:
         def ids = invoices.collect({ database.save(it) })
 
@@ -27,17 +23,17 @@ class InMemoryDatabaseTest extends Specification {
         ids.forEach({ assert database.getById(it).get() == invoices.get(it - 1) })
     }
 
-    def "getByID returns empty optional when there is no invoice with given id"() {
+    def "get by id returns empty optional when there is no invoice with given id"() {
         expect:
         !database.getById(1).isPresent()
     }
 
-    def "getAll returns empty collection in case of no invoices"() {
+    def "get all returns empty collection if there were no invoices"() {
         expect:
         database.getAll().isEmpty()
     }
 
-    def "getAll returns all invoices in the database, deleted invoice is not returned"() {
+    def "get all returns all invoices in the database, deleted invoice is not returned"() {
         given:
         invoices.forEach({ database.save(it) })
 
@@ -65,14 +61,29 @@ class InMemoryDatabaseTest extends Specification {
         database.getAll().isEmpty()
     }
 
-    def "can update the invoice"() {
+    def "deleting not existing invoice returns optional empty"() {
+        expect:
+        database.delete(123) == Optional.empty()
+    }
+
+    def "it's possible to update the invoice, original invoice is returned"() {
         given:
-        int id = database.save(invoices.get(0))
+        def originalInvoice = invoices.get(0)
+        int id = database.save(originalInvoice)
 
         when:
-        database.update(id, invoices.get(1))
+        def result = database.update(id, invoices.get(0))
 
         then:
-        database.getById(id).get() == invoices.get(1)
+        database.getById(id).get() == invoices.get(0)
+        result == Optional.of(originalInvoice)
+    }
+
+    def "updating not existing invoice throws exception"() {
+        when:
+        database.update(213, invoices.get(1))
+
+        then:
+        thrown(RuntimeException)
     }
 }
