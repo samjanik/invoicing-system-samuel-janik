@@ -75,8 +75,9 @@ public class FileBasedDatabase implements Database {
 
     @Override
     public Optional<Invoice> delete(int id) {
+
+        Optional<Invoice> deletedInvoice = getById(id);
         try {
-            Optional<Invoice> deletedInvoice = getById(id);
             List<String> updatedList = filesService.readAllLines(databasePath)
                 .stream()
                 .filter(line -> !containsId(id, line))
