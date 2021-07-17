@@ -77,5 +77,16 @@ class IdServiceTest extends Specification {
         then: 'Returns Runtime Exception'
         thrown(RuntimeException)
     }
+
+    def "Error thrown when try to instantiate class"() {
+        given: 'Delete the id tracker'
+        Files.delete(nextIdDbPath)
+
+        when: 'Instantiate class'
+        IdService idService = new IdService(nextIdDbPath, new FilesService())
+
+        then: 'Returns Runtime Exception'
+        thrown(RuntimeException)
+    }
 }
 
