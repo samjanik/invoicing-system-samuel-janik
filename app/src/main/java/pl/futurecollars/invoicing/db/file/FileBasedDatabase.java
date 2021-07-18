@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import pl.futurecollars.invoicing.db.Database;
 import pl.futurecollars.invoicing.model.Invoice;
 import pl.futurecollars.invoicing.utils.FilesService;
-import pl.futurecollars.invoicing.utils.IdService;
 import pl.futurecollars.invoicing.utils.JsonService;
 
 @AllArgsConstructor

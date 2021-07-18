@@ -1,9 +1,7 @@
 package pl.futurecollars.invoicing.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,41 +11,18 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.futurecollars.invoicing.db.Database;
-import pl.futurecollars.invoicing.db.file.FileBasedDatabase;
 import pl.futurecollars.invoicing.model.Invoice;
 import pl.futurecollars.invoicing.service.InvoiceService;
-import pl.futurecollars.invoicing.utils.FilesService;
-import pl.futurecollars.invoicing.utils.IdService;
-import pl.futurecollars.invoicing.utils.JsonService;
 
 @RestController
 @RequestMapping("invoices")
 public class InvoiceController {
 
-    private FilesService filesService = new FilesService();
-    private JsonService jsonService = new JsonService();
+    private InvoiceService invoiceService;
 
-    private InvoiceService invoiceService = new InvoiceService(fileBasedDatabase(idService(filesService), filesService, jsonService));
-
-    private IdService idService(FilesService filesService) {
-        Path idFilePath = null;
-        try {
-            idFilePath = File.createTempFile("Ids", ".json").toPath();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new IdService(idFilePath, filesService);
-    }
-
-    private Database fileBasedDatabase(IdService idProvider, FilesService filesService, JsonService jsonService) {
-        Path databaseFilePath = null;
-        try {
-            databaseFilePath = File.createTempFile("invoices", ".json").toPath();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new FileBasedDatabase(databaseFilePath, idProvider, filesService, jsonService);
+    @Autowired
+    private InvoiceController(InvoiceService invoiceService) {
+        this.invoiceService = invoiceService;
     }
 
     @GetMapping
