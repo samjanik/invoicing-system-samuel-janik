@@ -54,7 +54,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'pl.futurecollars.invoicing.App'
+    mainClass = 'pl.futurecollars.invoicing.InvoiceApplication'
 }
 
 test {

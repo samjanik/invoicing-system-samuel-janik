@@ -33,7 +33,7 @@ public class InvoiceController {
     private IdService idService(FilesService filesService) {
         Path idFilePath = null;
         try {
-            idFilePath = File.createTempFile("Id", ".json").toPath();
+            idFilePath = File.createTempFile("Ids", ".json").toPath();
         } catch (IOException e) {
             e.printStackTrace();
         }
