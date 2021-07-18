@@ -83,7 +83,7 @@ jacocoTestCoverageVerification {
             }
         }
     }
-    afterEvaluate { // TODO [SJ] remove after adding tests in Task #5
+    afterEvaluate { // TODO [SJ] remove after adding tests in Task #6
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: 'pl/futurecollars/invoicing/controller/**')
         }))
