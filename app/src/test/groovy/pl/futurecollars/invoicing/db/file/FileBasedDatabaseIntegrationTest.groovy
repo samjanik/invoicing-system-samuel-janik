@@ -5,7 +5,6 @@ import pl.futurecollars.invoicing.db.Database
 import pl.futurecollars.invoicing.helpers.TestHelpers
 
 import pl.futurecollars.invoicing.utils.FilesService
-import pl.futurecollars.invoicing.utils.IdService
 import pl.futurecollars.invoicing.utils.JsonService
 
 import java.nio.file.Files
