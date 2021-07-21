@@ -71,7 +71,7 @@ jacocoTestCoverageVerification {
             limit {
                 counter = 'BRANCH'
                 value = 'COVEREDRATIO'
-                minimum = 0.80
+                minimum = 0.85
             }
         }
 
@@ -79,13 +79,13 @@ jacocoTestCoverageVerification {
             limit {
                 counter = 'LINE'
                 value = 'COVEREDRATIO'
-                minimum = 0.80
+                minimum = 0.85
             }
         }
     }
-    afterEvaluate { // TODO [SJ] remove after adding tests in Task #6
+    afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: 'pl/futurecollars/invoicing/controller/**')
+            fileTree(dir: it, exclude: 'pl/futurecollars/invoicing/InvoiceApplication.class')
         }))
     }
 }

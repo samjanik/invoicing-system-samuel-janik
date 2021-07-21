@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Company {
 
-    private int id;
     private String taxIdentificationNumber;
     private String address;
     private String name;

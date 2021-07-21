@@ -78,12 +78,4 @@ abstract class AbstractDatabaseTest extends Specification {
         database.getById(id).get() == invoices.get(0)
         result == Optional.of(originalInvoice)
     }
-
-    def "updating not existing invoice throws exception"() {
-        when:
-        database.update(213, invoices.get(1))
-
-        then:
-        thrown(RuntimeException)
-    }
 }

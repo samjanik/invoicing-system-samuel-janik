@@ -26,9 +26,9 @@ public class JsonService {
         }
     }
 
-    public Invoice stringToObject(String objectAsString) {
+    public <T> T stringToObject(String objectAsString, Class<T> typeInference) {
         try {
-            return objectMapper.readValue(objectAsString, Invoice.class);
+            return objectMapper.readValue(objectAsString, typeInference);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Failed to serialize and parse Json string to object", e);
         }
