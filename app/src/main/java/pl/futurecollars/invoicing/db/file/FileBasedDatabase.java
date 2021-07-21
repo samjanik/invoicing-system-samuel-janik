@@ -36,7 +36,7 @@ public class FileBasedDatabase implements Database {
             return filesService.readAllLines(databasePath)
                 .stream()
                 .filter(line -> containsId(id, line))
-                .map(inv -> jsonService.stringToObject(inv))
+                .map(inv -> jsonService.stringToObject(inv, Invoice.class))
                 .findFirst();
         } catch (IOException ex) {
             throw new RuntimeException("Database failed to get invoice with id: " + id, ex);
@@ -48,7 +48,7 @@ public class FileBasedDatabase implements Database {
         try {
             return filesService.readAllLines(databasePath)
                 .stream()
-                .map(line -> jsonService.stringToObject(line))
+                .map(line -> jsonService.stringToObject(line, Invoice.class))
                 .collect(Collectors.toList());
         } catch (IOException ex) {
             throw new RuntimeException("Failed to read invoices from the file", ex);
@@ -57,18 +57,16 @@ public class FileBasedDatabase implements Database {
 
     @Override
     public Optional<Invoice> update(int id, Invoice updatedInvoice) {
-        Optional<Invoice> invoiceWithID = getById(id);
-        if (invoiceWithID.isEmpty()) {
-            throw new RuntimeException("Id " + id + " does not exist");
-        } else {
-            delete(id);
-            updatedInvoice.setId(id);
-            try {
+        try {
+            Optional<Invoice> invoiceWithID = getById(id);
+            if (invoiceWithID.isPresent()) {
+                delete(id);
+                updatedInvoice.setId(id);
                 filesService.writeLinesToFile(databasePath, List.of(jsonService.objectToString(updatedInvoice)));
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to update invoice with id: " + id, e);
             }
-            return Optional.of(updatedInvoice);
+            return invoiceWithID.isEmpty() ? Optional.empty() : Optional.of(updatedInvoice);
+        } catch (IOException ex) {
+            throw new RuntimeException("Failed to update invoice with id: " + id, ex);
         }
     }
 

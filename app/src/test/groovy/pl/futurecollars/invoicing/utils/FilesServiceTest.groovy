@@ -61,6 +61,9 @@ class FilesServiceTest extends Specification {
 
         then:
         letters == Files.readAllLines(invoicesDbpath)
+
+        cleanup:
+        Files.delete(invoicesDbpath)
     }
 
     def "empty file returns empty collection"() {

@@ -1,7 +1,6 @@
 package pl.futurecollars.invoicing.controller;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,12 +19,11 @@ public class InvoiceController {
 
     private InvoiceService invoiceService;
 
-    @Autowired
     private InvoiceController(InvoiceService invoiceService) {
         this.invoiceService = invoiceService;
     }
 
-    @GetMapping
+    @GetMapping(produces = { "application/json;charset=UTF-8" })
     public List<Invoice> getAll() {
         return invoiceService.getAll();
     }
@@ -35,25 +33,24 @@ public class InvoiceController {
         return invoiceService.save(invoice);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = { "application/json;charset=UTF-8" })
     public ResponseEntity<Invoice> getById(@PathVariable int id) {
         return invoiceService.getById(id)
             .map(invoice -> ResponseEntity.ok().body(invoice))
             .orElse(ResponseEntity.notFound().build());
     }
 
+    @PutMapping(value = "/{id}", produces = { "application/json;charset=UTF-8" })
+    public ResponseEntity<Invoice> updateById(@PathVariable int id, @RequestBody Invoice invoice) {
+        return invoiceService.update(id, invoice)
+            .map(updatedInvoice -> ResponseEntity.ok().body(updatedInvoice))
+            .orElse(ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Invoice> deleteById(@PathVariable int id) {
         return invoiceService.delete(id)
-            .map(invoice -> ResponseEntity.ok().body(invoice))
-            .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Invoice> updateById(@PathVariable int id, @RequestBody Invoice invoice) {
-        return invoiceService.update(id, invoice)
             .map(deletedInvoice -> ResponseEntity.ok().body(deletedInvoice))
             .orElse(ResponseEntity.notFound().build());
     }
-
 }

@@ -6,12 +6,16 @@ import pl.futurecollars.invoicing.helpers.TestHelpers
 
 import pl.futurecollars.invoicing.utils.FilesService
 import pl.futurecollars.invoicing.utils.JsonService
+import spock.lang.Shared
 
 import java.nio.file.Files
 
 class FileBasedDatabaseIntegrationTest extends AbstractDatabaseTest {
 
+    @Shared
     def dbPath
+    @Shared
+    def idPath
 
     @Override
     Database getDatabaseInstance() {
@@ -19,7 +23,7 @@ class FileBasedDatabaseIntegrationTest extends AbstractDatabaseTest {
         def filesService = new FilesService()
         def jsonService = new JsonService()
 
-        def idPath = File.createTempFile('ids', '.json').toPath()
+        idPath = File.createTempFile('ids', '.json').toPath()
         def idService = new IdService(idPath, filesService)
 
         dbPath = File.createTempFile('invoices', '.json').toPath()
@@ -77,5 +81,9 @@ class FileBasedDatabaseIntegrationTest extends AbstractDatabaseTest {
 
         then:
         thrown(RuntimeException)
+    }
+
+    def cleanupSpec() {
+        Files.delete(idPath)
     }
 }
