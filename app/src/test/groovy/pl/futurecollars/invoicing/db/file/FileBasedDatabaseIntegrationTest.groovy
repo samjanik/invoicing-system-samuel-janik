@@ -45,6 +45,7 @@ class FileBasedDatabaseIntegrationTest extends AbstractDatabaseTest {
 
         then:
         2 == Files.readAllLines(dbPath).size()
+
     }
 
     def "file based database returns Runtime Exception when missing database during save operation"() {
@@ -57,6 +58,7 @@ class FileBasedDatabaseIntegrationTest extends AbstractDatabaseTest {
 
         then:
         thrown(RuntimeException)
+
     }
 
     def "file based database returns Runtime Exception when missing database during getAll operation"() {
@@ -69,6 +71,7 @@ class FileBasedDatabaseIntegrationTest extends AbstractDatabaseTest {
 
         then:
         thrown(RuntimeException)
+
     }
 
     def "file based database returns Runtime Exception when missing database during getById operation"() {
@@ -81,9 +84,11 @@ class FileBasedDatabaseIntegrationTest extends AbstractDatabaseTest {
 
         then:
         thrown(RuntimeException)
+
     }
 
-    def cleanupSpec() {
+    def cleanup() {
         Files.delete(idPath)
     }
+
 }
