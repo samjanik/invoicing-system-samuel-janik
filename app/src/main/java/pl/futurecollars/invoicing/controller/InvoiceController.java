@@ -28,7 +28,7 @@ public class InvoiceController {
         return invoiceService.getAll();
     }
 
-    @PostMapping
+    @PostMapping(produces = { "application/json;charset=UTF-8" })
     public int save(@RequestBody Invoice invoice) {
         return invoiceService.save(invoice);
     }

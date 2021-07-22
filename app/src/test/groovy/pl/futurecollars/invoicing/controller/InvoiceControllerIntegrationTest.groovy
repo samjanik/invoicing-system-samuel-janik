@@ -18,6 +18,7 @@ import java.nio.file.StandardOpenOption
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static pl.futurecollars.invoicing.helpers.TestHelpers.invoice
+import pl.futurecollars.invoicing.db.file.IdService
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -32,14 +33,23 @@ class InvoiceControllerIntegrationTest extends Specification {
     @Autowired
     private JsonService jsonService
 
+    @Autowired
+    private IdService idService
+
     def setup() {
         getAllInvoices().each { invoice -> deleteInvoice(invoice.id) }
+        def line = "1"
+        def path = DatabaseConfiguration.idFilePath
+        Files.write(path, line.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
+        idService.nextId = 1
+
     }
 
     def cleanup() {
-        def line = ""
+        def line = "1"
         def path = DatabaseConfiguration.idFilePath
         Files.write(path, line.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
+        idService.nextId = 1
     }
 
     def "empty array is returned when no invoices were added"() {
@@ -191,9 +201,6 @@ class InvoiceControllerIntegrationTest extends Specification {
     }
 
     private List<Invoice> addUniqueInvoices(int count) {
-        def line = "1"
-        def path = DatabaseConfiguration.idFilePath
-        Files.write(path, line.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
         (1..count).collect { id ->
             def invoice = invoice(id)
             invoice.id = addInvoiceAndReturnId(jsonService.objectToString(invoice))
