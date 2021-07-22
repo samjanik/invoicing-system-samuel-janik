@@ -6,19 +6,20 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
-import pl.futurecollars.invoicing.db.file.DatabaseConfiguration
+import pl.futurecollars.invoicing.db.Database
+import pl.futurecollars.invoicing.db.file.IdService
+import pl.futurecollars.invoicing.db.memory.InMemoryDatabase
+import pl.futurecollars.invoicing.helpers.TestHelpers
 import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.utils.JsonService
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import java.nio.file.Files
-import java.nio.file.StandardOpenOption
+import java.time.LocalDate
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static pl.futurecollars.invoicing.helpers.TestHelpers.invoice
-import pl.futurecollars.invoicing.db.file.IdService
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -36,20 +37,23 @@ class InvoiceControllerIntegrationTest extends Specification {
     @Autowired
     private IdService idService
 
+    @Autowired
+    private InMemoryDatabase database
+
+    private LocalDate updatedDate = LocalDate.of(2020, 07, 29)
+
     def setup() {
         getAllInvoices().each { invoice -> deleteInvoice(invoice.id) }
-        def line = "1"
-        def path = DatabaseConfiguration.idFilePath
-        Files.write(path, line.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
-        idService.nextId = 1
-
+        idService.resetId()
+        database.nextId = 1
     }
 
-    def cleanup() {
-        def line = "1"
-        def path = DatabaseConfiguration.idFilePath
-        Files.write(path, line.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
-        idService.nextId = 1
+    def cleanup () {
+        getAllInvoices().each { invoice ->
+            deleteInvoice(invoice.id)
+        }
+        idService.resetId()
+        database.nextId = 1
     }
 
     def "empty array is returned when no invoices were added"() {
@@ -104,7 +108,7 @@ class InvoiceControllerIntegrationTest extends Specification {
                 .andExpect(status().isNotFound())
 
         where:
-        id << [-100, -2, -1, 0, 168, 1256]
+        id << [-100, -2, -1, 168, 1256]
     }
 
     def "404 is returned when invoice id is not found when deleting invoice [#id]"() {
@@ -117,7 +121,7 @@ class InvoiceControllerIntegrationTest extends Specification {
                 .andExpect(status().isNotFound())
 
         where:
-        id << [-100, -2, -1, 0, 12, 13, 99, 102, 1000]
+        id << [-100, -2, -1, 12, 13, 99, 102, 1000]
     }
 
     def "404 is returned when invoice id is not found when updating invoice [#id]"() {
@@ -132,14 +136,15 @@ class InvoiceControllerIntegrationTest extends Specification {
                 .andExpect(status().isNotFound())
 
         where:
-        id << [-100, -2, -1, 0, 12, 13, 99, 102, 1000]
+        id << [-100, -2, -1, 12, 13, 99, 102, 1000]
     }
 
     def "invoice date can be modified"() {
-        given:
+
         def id = addInvoiceAndReturnId(invoiceAsJson(44))
         def updatedInvoice = invoice(123)
         updatedInvoice.id = id
+        updatedInvoice.issueDate = updatedDate
 
         expect:
         mockMvc.perform(
@@ -166,16 +171,16 @@ class InvoiceControllerIntegrationTest extends Specification {
     }
 
     private int addInvoiceAndReturnId(String invoiceAsJson) {
-        Integer.valueOf(
-                mockMvc.perform(
-                        post(ENDPOINT)
-                                .content(invoiceAsJson)
-                                .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isOk())
-                        .andReturn()
-                        .response
-                        .contentAsString
-        )
+
+        def invoiceId = mockMvc.perform(
+                post(ENDPOINT)
+                        .content(invoiceAsJson)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn()
+                .response
+                .contentAsString
+        Integer.valueOf(invoiceId)
     }
 
     private Invoice getInvoiceById(int id) {
@@ -209,6 +214,8 @@ class InvoiceControllerIntegrationTest extends Specification {
     }
 
     private String invoiceAsJson(int id) {
-        jsonService.objectToString(invoice(id))
+        def testCaseInvoice = invoice(id)
+        testCaseInvoice.id = id
+        jsonService.objectToString(testCaseInvoice)
     }
 }

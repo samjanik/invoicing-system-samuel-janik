@@ -5,8 +5,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.ResultActions
-import pl.futurecollars.invoicing.db.file.DatabaseConfiguration
 import pl.futurecollars.invoicing.helpers.TestHelpers
 import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.utils.JsonService
@@ -35,7 +33,7 @@ class InvoiceControllerStepwiseTest extends Specification {
 
     private static final String ENDPOINT = "/invoices"
 
-       def "empty array is returned when no invoices were added"() {
+    def "empty array is returned when no invoices were added"() {
 
         when:
         def response = mockMvc.perform(get(ENDPOINT))
@@ -64,7 +62,7 @@ class InvoiceControllerStepwiseTest extends Specification {
                 .contentAsString
 
         then:
-        invoiceId == "1"
+        Integer.valueOf(invoiceId) == 1
 
     }
 
@@ -149,17 +147,14 @@ class InvoiceControllerStepwiseTest extends Specification {
     def "invoice can be deleted"() {
         expect:
         mockMvc.perform(delete("$ENDPOINT/1"))
-                .andDo(print())
                 .andExpect(status().isOk())
 
         and:
         mockMvc.perform(delete("$ENDPOINT/1"))
-                .andDo(print())
                 .andExpect(status().isNotFound())
 
         and:
         mockMvc.perform(get("$ENDPOINT/1"))
-                .andDo(print())
                 .andExpect(status().isNotFound())
     }
 
