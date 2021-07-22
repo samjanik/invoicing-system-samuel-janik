@@ -62,7 +62,7 @@ public class FileBasedDatabase implements Database {
             if (invoiceWithID.isPresent()) {
                 delete(id);
                 updatedInvoice.setId(id);
-                filesService.writeLinesToFile(databasePath, List.of(jsonService.objectToString(updatedInvoice)));
+                filesService.appendLineToFile(databasePath, jsonService.objectToString(updatedInvoice));
             }
             return invoiceWithID.isEmpty() ? Optional.empty() : Optional.of(updatedInvoice);
         } catch (IOException ex) {

@@ -5,6 +5,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.ResultActions
+import pl.futurecollars.invoicing.db.file.DatabaseConfiguration
 import pl.futurecollars.invoicing.helpers.TestHelpers
 import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.utils.JsonService
@@ -15,6 +17,7 @@ import java.time.LocalDate
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import static pl.futurecollars.invoicing.helpers.TestHelpers.invoice
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -32,6 +35,16 @@ class InvoiceControllerStepwiseTest extends Specification {
     private LocalDate updatedDate = LocalDate.of(2021, 07, 29)
 
     private static final String ENDPOINT = "/invoices"
+
+    def "prep test run configuration for database"() {
+        getAllInvoices().each { invoice -> deleteInvoice(invoice.id) }
+    }
+
+    def "prepare stepwise test environment for id" () {
+        def line = "1"
+        def path = DatabaseConfiguration.idFilePath
+        java.nio.file.Files.write(path, line.getBytes(), java.nio.file.StandardOpenOption.TRUNCATE_EXISTING);
+    }
 
     def "empty array is returned when no invoices were added"() {
 
@@ -160,4 +173,21 @@ class InvoiceControllerStepwiseTest extends Specification {
                 .andDo(print())
                 .andExpect(status().isNotFound())
     }
+
+    private ResultActions deleteInvoice(int id) {
+        mockMvc.perform(delete("$ENDPOINT/$id"))
+                .andExpect(status().isOk())
+    }
+
+    private List<Invoice> getAllInvoices() {
+        def response = mockMvc.perform(get(ENDPOINT)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn()
+                .response
+                .contentAsString
+
+        return jsonService.stringToObject(response, Invoice[])
+    }
+
 }
