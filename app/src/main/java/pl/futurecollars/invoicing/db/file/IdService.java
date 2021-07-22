@@ -12,7 +12,7 @@ public class IdService {
     private final Path idFilePath;
     private final FilesService filesService;
 
-    private int nextId;
+    private int nextId = 1;
 
     public IdService(Path idFilePath, FilesService filesService) {
         this.idFilePath = idFilePath;
@@ -22,7 +22,6 @@ public class IdService {
             List<String> lastUsedID = filesService.readAllLines(idFilePath);
             if (lastUsedID.isEmpty()) {
                 filesService.writeToFile(idFilePath, "1");
-                nextId = 1;
             } else {
                 nextId = Integer.parseInt(lastUsedID.get(0));
             }
@@ -42,5 +41,15 @@ public class IdService {
     public int getNextIdAndIncrement() {
         printIDtoTracker();
         return nextId++;
+    }
+
+    public int resetId() {
+        try {
+            filesService.writeToFile(idFilePath, String.valueOf(1));
+            nextId = 1;
+            return nextId;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to write to id file", e);
+        }
     }
 }

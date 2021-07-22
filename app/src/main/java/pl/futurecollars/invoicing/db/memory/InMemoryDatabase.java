@@ -5,15 +5,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import lombok.Data;
 import org.springframework.stereotype.Repository;
 import pl.futurecollars.invoicing.db.Database;
 import pl.futurecollars.invoicing.model.Invoice;
 
 @Repository
+@Data
 public class InMemoryDatabase implements Database {
 
+    public int nextId = 1;
     private final Map<Integer, Invoice> invoices = new HashMap<>();
-    private int nextId = 1;
 
     @Override
     public int save(Invoice invoice) {
