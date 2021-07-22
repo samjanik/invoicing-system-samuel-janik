@@ -17,7 +17,6 @@ import java.time.LocalDate
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import static pl.futurecollars.invoicing.helpers.TestHelpers.invoice
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -36,17 +35,7 @@ class InvoiceControllerStepwiseTest extends Specification {
 
     private static final String ENDPOINT = "/invoices"
 
-    def "prep test run configuration for database"() {
-        getAllInvoices().each { invoice -> deleteInvoice(invoice.id) }
-    }
-
-    def "prepare stepwise test environment for id" () {
-        def line = "1"
-        def path = DatabaseConfiguration.idFilePath
-        java.nio.file.Files.write(path, line.getBytes(), java.nio.file.StandardOpenOption.TRUNCATE_EXISTING);
-    }
-
-    def "empty array is returned when no invoices were added"() {
+       def "empty array is returned when no invoices were added"() {
 
         when:
         def response = mockMvc.perform(get(ENDPOINT))
@@ -172,22 +161,6 @@ class InvoiceControllerStepwiseTest extends Specification {
         mockMvc.perform(get("$ENDPOINT/1"))
                 .andDo(print())
                 .andExpect(status().isNotFound())
-    }
-
-    private ResultActions deleteInvoice(int id) {
-        mockMvc.perform(delete("$ENDPOINT/$id"))
-                .andExpect(status().isOk())
-    }
-
-    private List<Invoice> getAllInvoices() {
-        def response = mockMvc.perform(get(ENDPOINT)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn()
-                .response
-                .contentAsString
-
-        return jsonService.stringToObject(response, Invoice[])
     }
 
 }
