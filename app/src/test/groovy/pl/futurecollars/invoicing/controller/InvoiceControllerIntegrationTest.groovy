@@ -6,10 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
-import pl.futurecollars.invoicing.db.Database
 import pl.futurecollars.invoicing.db.file.IdService
 import pl.futurecollars.invoicing.db.memory.InMemoryDatabase
-import pl.futurecollars.invoicing.helpers.TestHelpers
 import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.utils.JsonService
 import spock.lang.Specification
