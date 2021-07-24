@@ -4,9 +4,9 @@ name: Building the Invoicing system - CI
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ '*' ]
+    branches: [ master ] [ task_* ]
   pull_request:
-    branches: [ '*' ]
+    branches: [ master ] [ task_* ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
