@@ -5,9 +5,11 @@ on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
     branches:
+      - master
       - task_*
   pull_request:
     branches:
+      - master
       - task_*
 
   # Allows you to run this workflow manually from the Actions tab
