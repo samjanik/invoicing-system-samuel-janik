@@ -26,6 +26,13 @@ application {
     mainClass = 'pl.futurecollars.invoicing.InvoiceApplication'
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(15)
+        vendor = JvmVendorSpec.ADOPTOPENJDK
+    }
+}
+
 dependencies {
 
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
