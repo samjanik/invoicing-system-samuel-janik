@@ -4,33 +4,24 @@ name: Building the Invoicing system - CI
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches:
-      - master
-      - task_*
+    branches: [ master ]
   pull_request:
-    branches:
-      - master
-      - task_*
+    branches: [ master ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
-  verify-test-coverage:
-    runs-on: windows-latest
-    timeout-minutes: 10
-
-    steps:
-      -uses: actions/checkout@v2
-      -name: Check test coverage
-       run: ./gradlew check
-
   build:
     runs-on: windows-latest
     timeout-minutes: 10
-    needs:
-      - verify-test-coverage
+
     steps:
       - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+           java-version: '11'
+           distribution: 'adopt'
       - name: Build with Gradle
         run: ./gradlew build
