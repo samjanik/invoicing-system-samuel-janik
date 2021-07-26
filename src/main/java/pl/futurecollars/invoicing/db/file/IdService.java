@@ -40,14 +40,4 @@ public class IdService {
         printIDtoTracker();
         return nextId++;
     }
-
-    public int resetId() {
-        try {
-            filesService.writeToFile(idFilePath, String.valueOf(1));
-            nextId = 1;
-            return nextId;
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to write to id file", e);
-        }
-    }
 }

@@ -17,7 +17,7 @@ import pl.futurecollars.invoicing.service.InvoiceService;
 @RequestMapping("invoices")
 public class InvoiceController {
 
-    private InvoiceService invoiceService;
+    private final InvoiceService invoiceService;
 
     private InvoiceController(InvoiceService invoiceService) {
         this.invoiceService = invoiceService;
