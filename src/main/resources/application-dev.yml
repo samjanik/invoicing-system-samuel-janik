@@ -1,0 +1,6 @@
+invoicing-system:
+  database: memory
+
+
+server:
+  port: 7777

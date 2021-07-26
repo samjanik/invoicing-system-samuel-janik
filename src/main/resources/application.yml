@@ -1,0 +1,23 @@
+spring:
+  profiles:
+    active: default
+
+invoicing-system:
+  database: file
+  database.prefix: db
+  database.invoices.file: invoices.json
+  database.id.file: id.txt
+
+logging:
+  level:
+    org:
+      springframework:
+        boot: INFO
+    pl:
+      futurecollars:
+        invoicing: INFO
+        invoicing.db: DEBUG
+
+
+
+

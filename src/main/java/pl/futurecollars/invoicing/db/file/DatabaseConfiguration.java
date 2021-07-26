@@ -3,40 +3,60 @@ package pl.futurecollars.invoicing.db.file;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import pl.futurecollars.invoicing.db.Database;
+import pl.futurecollars.invoicing.db.memory.InMemoryDatabase;
 import pl.futurecollars.invoicing.utils.FilesService;
 import pl.futurecollars.invoicing.utils.JsonService;
 
+@Slf4j
 @Configuration
 public class DatabaseConfiguration {
 
     private static Path idFilePath;
     private static Path databaseFilePath;
-    private static final String DATABASE_LOCATION = "db";
-    private static final String ID_FILE_NAME = "id.json";
-    private static final String INVOICES_FILE_NAME = "invoices.json";
 
     @Bean
-    public IdService idService(FilesService filesService) {
+    public IdService idService(FilesService filesService,
+                               @Value("${invoicing-system.database.prefix}") String filePrefix,
+                               @Value("${invoicing-system.database.id.file}") String idFile) {
         idFilePath = null;
         try {
-            idFilePath = Files.createTempFile(DATABASE_LOCATION, ID_FILE_NAME);
+            idFilePath = Files.createTempFile(filePrefix, idFile);
         } catch (IOException e) {
             throw new RuntimeException("Failed to initiate id database", e);
         }
         return new IdService(idFilePath, filesService);
     }
 
+    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "file")
     @Bean
-    public Database fileBasedDatabase(IdService idService, FilesService filesService, JsonService jsonService) {
+    public Database fileBasedDatabase(IdService idService,
+                                      FilesService filesService,
+                                      JsonService jsonService,
+                                      @Value("${invoicing-system.database.prefix}") String filePrefix,
+                                      @Value("${invoicing-system.database.invoices.file}") String invoicesFile
+                                      ) {
         databaseFilePath = null;
         try {
-            databaseFilePath = Files.createTempFile(DATABASE_LOCATION, INVOICES_FILE_NAME);
+            databaseFilePath = Files.createTempFile(filePrefix, invoicesFile);
         } catch (IOException e) {
             throw new RuntimeException("Failed to initiate invoices database", e);
         }
+        log.debug("Creating file-based database");
         return new FileBasedDatabase(databaseFilePath, idService, filesService, jsonService);
+    }
+
+    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "memory")
+    @Profile("dev")
+    @Bean
+    public Database inMemoryDatabase() {
+        log.debug("Creating in-memory database");
+        return new InMemoryDatabase();
     }
 }
