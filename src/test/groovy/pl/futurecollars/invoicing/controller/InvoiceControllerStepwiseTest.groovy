@@ -149,15 +149,15 @@ class InvoiceControllerStepwiseTest extends Specification {
 
     def "invoice can be deleted"() {
         expect:
-        mockMvc.perform(delete("$ENDPOINT/1"))
+        mockMvc.perform(delete("$ENDPOINT/$invoiceId"))
                 .andExpect(status().isOk())
 
         and:
-        mockMvc.perform(delete("$ENDPOINT/1"))
+        mockMvc.perform(delete("$ENDPOINT/$invoiceId"))
                 .andExpect(status().isNotFound())
 
         and:
-        mockMvc.perform(get("$ENDPOINT/1"))
+        mockMvc.perform(get("$ENDPOINT/$invoiceId"))
                 .andExpect(status().isNotFound())
     }
 
