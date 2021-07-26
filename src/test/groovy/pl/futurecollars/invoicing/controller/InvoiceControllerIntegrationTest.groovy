@@ -6,8 +6,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
-import pl.futurecollars.invoicing.db.file.IdService
-import pl.futurecollars.invoicing.db.memory.InMemoryDatabase
 import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.utils.JsonService
 import spock.lang.Specification
@@ -32,26 +30,10 @@ class InvoiceControllerIntegrationTest extends Specification {
     @Autowired
     private JsonService jsonService
 
-    @Autowired
-    private IdService idService
-
-    @Autowired
-    private InMemoryDatabase database
-
     private LocalDate updatedDate = LocalDate.of(2020, 07, 29)
 
     def setup() {
         getAllInvoices().each { invoice -> deleteInvoice(invoice.id) }
-        idService.resetId()
-        database.nextId = 1
-    }
-
-    def cleanup () {
-        getAllInvoices().each { invoice ->
-            deleteInvoice(invoice.id)
-        }
-        idService.resetId()
-        database.nextId = 1
     }
 
     def "empty array is returned when no invoices were added"() {

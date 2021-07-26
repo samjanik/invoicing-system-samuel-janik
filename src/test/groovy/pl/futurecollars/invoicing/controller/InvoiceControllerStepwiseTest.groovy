@@ -8,6 +8,7 @@ import org.springframework.test.web.servlet.MockMvc
 import pl.futurecollars.invoicing.helpers.TestHelpers
 import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.utils.JsonService
+import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
 
@@ -33,6 +34,9 @@ class InvoiceControllerStepwiseTest extends Specification {
 
     private static final String ENDPOINT = "/invoices"
 
+    @Shared
+    private int invoiceId
+
     def "empty array is returned when no invoices were added"() {
 
         when:
@@ -53,23 +57,22 @@ class InvoiceControllerStepwiseTest extends Specification {
         def invoiceAsJson = jsonService.objectToString(originalInvoice)
 
         when:
-        def invoiceId = mockMvc.perform(post(ENDPOINT)
+        invoiceId = Integer.valueOf(mockMvc.perform(post(ENDPOINT)
                 .content(invoiceAsJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn()
                 .response
-                .contentAsString
+                .contentAsString)
 
         then:
-        Integer.valueOf(invoiceId) == 1
-
+        invoiceId >= 1
     }
 
     def "one invoice is returned when getting all invoices"() {
 
         def expectedInvoice = originalInvoice
-        expectedInvoice.id = 1
+        expectedInvoice.id = invoiceId
 
         when:
         def response = mockMvc.perform(get(ENDPOINT)
@@ -90,7 +93,7 @@ class InvoiceControllerStepwiseTest extends Specification {
 
         given:
         def expectedInvoice = originalInvoice
-        expectedInvoice.id = 1
+        expectedInvoice.id = invoiceId
 
         when:
         def response = mockMvc.perform(get("$ENDPOINT/$expectedInvoice.id"))
@@ -110,7 +113,7 @@ class InvoiceControllerStepwiseTest extends Specification {
 
         given:
         def modifiedInvoice = originalInvoice
-        modifiedInvoice.id = 1
+        modifiedInvoice.id = invoiceId
         modifiedInvoice.issueDate = updatedDate
 
         def invoiceAsJson = jsonService.objectToString(modifiedInvoice)
@@ -127,7 +130,7 @@ class InvoiceControllerStepwiseTest extends Specification {
 
         given:
         def expectedInvoice = originalInvoice
-        expectedInvoice.id = 1
+        expectedInvoice.id = invoiceId
         expectedInvoice.issueDate = updatedDate
 
         when:
