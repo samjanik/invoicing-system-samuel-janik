@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import pl.futurecollars.invoicing.db.Database;
 import pl.futurecollars.invoicing.db.memory.InMemoryDatabase;
 import pl.futurecollars.invoicing.utils.FilesService;
@@ -53,7 +52,6 @@ public class DatabaseConfiguration {
     }
 
     @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "memory")
-    @Profile("dev")
     @Bean
     public Database inMemoryDatabase() {
         log.debug("Creating in-memory database");
