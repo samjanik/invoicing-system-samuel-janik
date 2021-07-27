@@ -1,7 +1,7 @@
 buildscript {
     ext {
         apacheGroovyVersion = '3.0.8'
-        groovyVersion = '2.0-groovy-3.0'
+        spockVersion = '2.0-groovy-3.0'
         jacksonVersion = '2.11.1'
         lombokVersion = '1.18.20'
         springBootVersion = '2.5.2'
@@ -10,7 +10,6 @@ buildscript {
 }
 
 plugins {
-    id 'application'
     id 'checkstyle'
     id 'groovy'
     id 'jacoco'
@@ -20,10 +19,6 @@ plugins {
 
 repositories {
     mavenCentral()
-}
-
-application {
-    mainClass = 'pl.futurecollars.invoicing.InvoiceApplication'
 }
 
 java {
@@ -51,15 +46,15 @@ dependencies {
     testImplementation(
             'org.springframework.boot:spring-boot-starter-test',
             "org.codehaus.groovy:groovy:${apacheGroovyVersion}",
-            "org.spockframework:spock-core:${groovyVersion}",
-            "org.spockframework:spock-spring:${groovyVersion}"
+            "org.spockframework:spock-core:${spockVersion}",
+            "org.spockframework:spock-spring:${spockVersion}"
     )
 }
 
 jacoco {
     toolVersion = "0.8.6"
 }
-//check if will need this????
+
 tasks.named('test') {
     // Use junit platform for unit tests.
     useJUnitPlatform()
@@ -95,8 +90,7 @@ jacocoTestCoverageVerification {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: ['pl/futurecollars/invoicing/InvoiceApplication.class',
-                                        'pl/futurecollars/invoicing/db/DatabaseConfiguration.class',
-                                        'pl/futurecollars/invoicing/config.class'])
+                                        'pl/futurecollars/invoicing/db/DatabaseConfiguration.class'])
         }))
     }
 }
