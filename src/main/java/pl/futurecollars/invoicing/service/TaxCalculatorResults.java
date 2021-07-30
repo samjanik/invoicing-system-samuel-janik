@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
 @Data
 public class TaxCalculatorResults {
 
