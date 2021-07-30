@@ -29,9 +29,9 @@ class TestHelpers {
     static invoice(int id) {
         Invoice.builder()
                 .issueDate(LocalDate.now())
-                .buyer(company(id))
-                .seller(company(id + 1))
-                .entries(List.of(product(id)))
+                .buyer(company(id + 10))
+                .seller(company(id))
+                .entries((1..id).collect( {product(it)} ))
                 .build()
     }
 }
