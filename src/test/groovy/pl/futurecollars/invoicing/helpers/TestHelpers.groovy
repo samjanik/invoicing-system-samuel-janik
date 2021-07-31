@@ -11,7 +11,7 @@ class TestHelpers {
 
     static company(int id) {
         Company.builder()
-                .taxIdentificationNumber(("$id").repeat(10))
+                .taxIdentificationNumber("$id")
                 .address("ul. Bukowińska 24d/$id 02-703 Warszawa, Polska")
                 .name("iCode Trust $id Sp. z o.o")
                 .build()
