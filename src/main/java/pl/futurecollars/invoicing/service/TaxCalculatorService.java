@@ -43,9 +43,9 @@ public class TaxCalculatorService {
             .income(income(taxIdentificationNumber))
             .costs(costs(taxIdentificationNumber))
             .earnings(getEarnings(taxIdentificationNumber))
-            .incomingVat(incomingVat(taxIdentificationNumber))
-            .outgoingVat(outgoingVat(taxIdentificationNumber))
-            .vatToReturn(getVatToReturn(taxIdentificationNumber))
+            .collectedVat(incomingVat(taxIdentificationNumber))
+            .paidVat(outgoingVat(taxIdentificationNumber))
+            .dueVat(getVatToReturn(taxIdentificationNumber))
             .build();
     }
 

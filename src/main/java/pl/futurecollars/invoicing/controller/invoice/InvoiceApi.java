@@ -10,24 +10,26 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import pl.futurecollars.invoicing.model.Invoice;
 
+@RequestMapping(value = "invoices", produces = {"application/json;charset=UTF-8"})
 @Api(tags = {"invoice-controller"})
 public interface InvoiceApi {
 
-    @GetMapping(produces = {"application/json;charset=UTF-8"})
+    @GetMapping
     @ApiOperation(value = "Get list of all invoices")
     List<Invoice> getAll();
 
-    @PostMapping(produces = {"application/json;charset=UTF-8"})
+    @PostMapping
     @ApiOperation(value = "Add new invoice to the system")
     int save(@RequestBody Invoice invoice);
 
-    @GetMapping(value = "/{id}", produces = {"application/json;charset=UTF-8"})
+    @GetMapping(value = "/{id}")
     @ApiOperation(value = "Get invoice by id")
     ResponseEntity<Invoice> getById(@PathVariable int id);
 
-    @PutMapping(value = "/{id}", produces = {"application/json;charset=UTF-8"})
+    @PutMapping(value = "/{id}")
     @ApiOperation(value = "Update invoice with given id")
     ResponseEntity<Invoice> updateById(@PathVariable int id, @RequestBody Invoice invoice);
 
