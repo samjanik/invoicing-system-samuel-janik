@@ -16,7 +16,7 @@ public class TaxCalculatorResults {
     private BigDecimal costs;
     private BigDecimal earnings;
 
-    private BigDecimal incomingVat;
-    private BigDecimal outgoingVat;
-    private BigDecimal vatToReturn;
+    private BigDecimal collectedVat;
+    private BigDecimal paidVat;
+    private BigDecimal dueVat;
 }
