@@ -1,6 +1,7 @@
 package pl.futurecollars.invoicing.controller
 
 import pl.futurecollars.invoicing.model.Car
+import pl.futurecollars.invoicing.model.Company
 import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.model.InvoiceEntry
 
@@ -137,4 +138,57 @@ class TaxCalculatorControllerIntegrationTest extends AbstractControllerTest {
         taxCalculatorResponse.dueVat == -11.72
     }
 
+    def "All calculations are executed correctly"() {
+        given:
+        def ourCompany = Company.builder()
+                .taxIdentificationNumber("1234")
+                .pensionInsurance(514.57)
+                .healthInsurance(319.94)
+                .build()
+
+        def invoiceWithIncome = Invoice.builder()
+                .seller(ourCompany)
+                .buyer(company(2))
+                .entries(List.of(
+                        InvoiceEntry.builder()
+                                .netPrice(76011.62)
+                                .build()
+                ))
+                .build()
+
+        def invoiceWithCosts = Invoice.builder()
+                .seller(company(4))
+                .buyer(ourCompany)
+                .entries(List.of(
+                        InvoiceEntry.builder()
+                                .netPrice(11329.47)
+                                .build()
+                ))
+                .build()
+
+        addInvoiceAndReturnId(invoiceWithIncome)
+        addInvoiceAndReturnId(invoiceWithCosts)
+
+        when:
+        def taxCalculatorResponse = calculateTax(ourCompany)
+
+        then:
+        with(taxCalculatorResponse) {
+            income == 76011.62
+            costs == 11329.47
+            earnings == 64682.15
+            pensionInsurance == 514.57
+            earningsLessPensionInsurance == 64167.58
+            earningsLessPensionInsuranceRoundedTaxCalculationBase == 64168
+            incomeTax == 12191.92
+            healthInsuranceIncurredCost == 319.94
+            healthInsuranceDeductible == 275.50
+            incomeTaxLessHealthInsurance == 11916.42
+            finalIncomeTax == 11916
+
+            collectedVat == 0
+            paidVat == 0
+            dueVat == 0
+        }
+    }
 }

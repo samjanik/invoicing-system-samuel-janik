@@ -19,4 +19,16 @@ public class TaxCalculatorResults {
     private BigDecimal collectedVat;
     private BigDecimal paidVat;
     private BigDecimal dueVat;
+
+    private BigDecimal pensionInsurance;
+    private BigDecimal earningsLessPensionInsurance;
+    private BigDecimal earningsLessPensionInsuranceRoundedTaxCalculationBase;
+
+    private BigDecimal incomeTax;
+    private BigDecimal healthInsuranceIncurredCost;
+    private BigDecimal healthInsuranceDeductible;
+    private BigDecimal incomeTaxLessHealthInsurance;
+    private BigDecimal finalIncomeTax;
+
+
 }

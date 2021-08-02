@@ -1,4 +1,4 @@
-package pl.futurecollars.invoicing.db.file;
+package pl.futurecollars.invoicing.db;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,7 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import pl.futurecollars.invoicing.db.Database;
+import pl.futurecollars.invoicing.db.file.FileBasedDatabase;
+import pl.futurecollars.invoicing.db.file.IdService;
 import pl.futurecollars.invoicing.db.memory.InMemoryDatabase;
 import pl.futurecollars.invoicing.utils.FilesService;
 import pl.futurecollars.invoicing.utils.JsonService;
@@ -24,7 +25,6 @@ public class DatabaseConfiguration {
     public IdService idService(FilesService filesService,
                                @Value("${invoicing-system.database.prefix}") String filePrefix,
                                @Value("${invoicing-system.database.id.file}") String idFile) {
-        idFilePath = null;
         try {
             idFilePath = Files.createTempFile(filePrefix, idFile);
         } catch (IOException e) {
@@ -41,7 +41,6 @@ public class DatabaseConfiguration {
                                       @Value("${invoicing-system.database.prefix}") String filePrefix,
                                       @Value("${invoicing-system.database.invoices.file}") String invoicesFile
                                       ) {
-        databaseFilePath = null;
         try {
             databaseFilePath = Files.createTempFile(filePrefix, invoicesFile);
         } catch (IOException e) {
