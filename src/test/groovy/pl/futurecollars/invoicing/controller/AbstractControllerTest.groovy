@@ -6,11 +6,11 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
+import pl.futurecollars.invoicing.model.Company
 import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.service.TaxCalculatorResults
 import pl.futurecollars.invoicing.utils.JsonService
 import spock.lang.Specification
-import spock.lang.Unroll
 
 import java.time.LocalDate
 
@@ -37,11 +37,11 @@ class AbstractControllerTest extends Specification {
         getAllInvoices().each { invoice -> deleteInvoice(invoice.id) }
     }
 
-    int addInvoiceAndReturnId(String invoiceAsJson) {
+    int addInvoiceAndReturnId(Invoice invoice) {
 
         def invoiceId = mockMvc.perform(
                 post(INVOICE_ENDPOINT)
-                        .content(invoiceAsJson)
+                        .content(jsonService.objectToString(invoice))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn()
@@ -53,7 +53,7 @@ class AbstractControllerTest extends Specification {
     List<Invoice> addUniqueInvoices(int count) {
         (1..count).collect { id ->
             def invoice = invoice(id)
-            invoice.id = addInvoiceAndReturnId(jsonService.objectToString(invoice))
+            invoice.id = addInvoiceAndReturnId(invoice)
             return invoice
         }
     }
@@ -91,8 +91,12 @@ class AbstractControllerTest extends Specification {
         jsonService.objectToString(testCaseInvoice)
     }
 
-    TaxCalculatorResults calculateTax(String taxIdentificationNumber) {
-        def response = mockMvc.perform(get("$TAX_ENDPOINT/$taxIdentificationNumber"))
+    TaxCalculatorResults calculateTax(Company company) {
+
+        def response = mockMvc.perform(
+                post("$TAX_ENDPOINT")
+                        .content(jsonService.objectToString(company))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn()
                 .response

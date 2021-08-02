@@ -16,8 +16,14 @@ public class InvoiceEntry {
     @ApiModelProperty(value = "Product/service description", required = true, example = "Apple iPhone 8")
     private String description;
 
+    @ApiModelProperty(value = "Number of items", required = true, example = "3")
+    private int quantity;
+
     @ApiModelProperty(value = "Product/service net price", required = true, example = "1857.15")
-    private BigDecimal price;
+    private BigDecimal netPrice;
+
+    @ApiModelProperty(value = "Car related expense, empty if expense is not related to car")
+    private Car carExpense;
 
     @ApiModelProperty(value = "Product/service tax value", required = true, example = "187.45")
     private BigDecimal vatValue;
