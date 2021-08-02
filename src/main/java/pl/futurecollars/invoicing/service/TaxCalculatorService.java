@@ -60,10 +60,29 @@ public class TaxCalculatorService {
     public TaxCalculatorResults calculateTaxes(Company company) {
         String taxIdentificationNumber = company.getTaxIdentificationNumber();
 
+        BigDecimal earnings = getEarnings(taxIdentificationNumber);
+        BigDecimal earningsLessPensionInsurance = earnings.subtract(company.getPensionInsurance());
+        BigDecimal earningsLessPensionInsuranceRoundedTaxCalculationBase = earningsLessPensionInsurance.setScale(0, RoundingMode.HALF_DOWN);
+        BigDecimal incomeTax = earningsLessPensionInsuranceRoundedTaxCalculationBase.multiply(BigDecimal.valueOf(19, 2));
+        BigDecimal healthInsuranceDeductible =
+            company.getHealthInsurance().multiply(BigDecimal.valueOf(775)).divide(BigDecimal.valueOf(900), RoundingMode.HALF_UP);
+        BigDecimal incomeTaxLessHealthInsurance = incomeTax.subtract(healthInsuranceDeductible);
+
         return TaxCalculatorResults.builder()
             .income(income(taxIdentificationNumber))
             .costs(costs(taxIdentificationNumber))
-            .earnings(getEarnings(taxIdentificationNumber))
+            .earnings(earnings)
+
+            .pensionInsurance(company.getPensionInsurance())
+            .earningsLessPensionInsurance(earningsLessPensionInsurance)
+            .earningsLessPensionInsuranceRoundedTaxCalculationBase(earningsLessPensionInsuranceRoundedTaxCalculationBase)
+
+            .incomeTax(incomeTax)
+            .healthInsuranceIncurredCost(company.getHealthInsurance())
+            .healthInsuranceDeductible(healthInsuranceDeductible)
+            .incomeTaxLessHealthInsurance(incomeTaxLessHealthInsurance)
+            .finalIncomeTax(incomeTaxLessHealthInsurance.setScale(0, RoundingMode.DOWN))
+
             .collectedVat(collectedVat(taxIdentificationNumber))
             .paidVat(paidVat(taxIdentificationNumber))
             .dueVat(dueVat(taxIdentificationNumber))

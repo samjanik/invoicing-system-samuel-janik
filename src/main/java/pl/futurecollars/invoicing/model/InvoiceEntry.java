@@ -26,7 +26,8 @@ public class InvoiceEntry {
     private Car carExpense;
 
     @ApiModelProperty(value = "Product/service tax value", required = true, example = "187.45")
-    private BigDecimal vatValue;
+    @Builder.Default
+    private BigDecimal vatValue = BigDecimal.ZERO;
 
     @ApiModelProperty(value = "Tax rate", required = true)
     private Vat vatRate;
