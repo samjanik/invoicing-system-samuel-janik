@@ -22,6 +22,7 @@ public class DatabaseConfiguration {
     private static Path databaseFilePath;
 
     @Bean
+    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "file")
     public IdService idService(FilesService filesService,
                                @Value("${invoicing-system.database.prefix}") String filePrefix,
                                @Value("${invoicing-system.database.id.file}") String idFile) {
@@ -33,14 +34,14 @@ public class DatabaseConfiguration {
         return new IdService(idFilePath, filesService);
     }
 
-    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "file")
     @Bean
+    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "file")
     public Database fileBasedDatabase(IdService idService,
                                       FilesService filesService,
                                       JsonService jsonService,
                                       @Value("${invoicing-system.database.prefix}") String filePrefix,
                                       @Value("${invoicing-system.database.invoices.file}") String invoicesFile
-                                      ) {
+    ) {
         try {
             databaseFilePath = Files.createTempFile(filePrefix, invoicesFile);
         } catch (IOException e) {
@@ -50,8 +51,8 @@ public class DatabaseConfiguration {
         return new FileBasedDatabase(databaseFilePath, idService, filesService, jsonService);
     }
 
-    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "memory")
     @Bean
+    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "memory")
     public Database inMemoryDatabase() {
         log.debug("Creating in-memory database");
         return new InMemoryDatabase();

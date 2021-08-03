@@ -1,0 +1,8 @@
+server:
+  port: 8888
+
+invoicing-system:
+  database: file
+  database.prefix: db
+  database.invoices.file: invoices.json
+  database.id.file: id.txt
