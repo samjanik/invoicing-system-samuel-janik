@@ -8,6 +8,8 @@ buildscript {
         springDependencyManagementVersion = '1.0.11.RELEASE'
         springFoxStarterVersion = '3.0.0'
         springFoxUiVersion = '3.0.0'
+        postgresqlVersion = '42.2.19'
+        flywayVersion = '7.12.0'
     }
 }
 
@@ -36,15 +38,18 @@ dependencies {
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
     testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
 
     implementation(
 
             'org.springframework.boot:spring-boot-starter-web',
+            'org.springframework.boot:spring-boot-starter-jdbc',
             'com.google.guava:guava:30.0-jre',
             "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}",
             "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}",
             "io.springfox:springfox-boot-starter:${springFoxStarterVersion}",
-            "io.springfox:springfox-swagger-ui:${springFoxUiVersion}"
+            "io.springfox:springfox-swagger-ui:${springFoxUiVersion}",
+            "org.flywaydb:flyway-core:${flywayVersion}"
     )
 
     testImplementation(
@@ -79,7 +84,7 @@ jacocoTestCoverageVerification {
             limit {
                 counter = 'BRANCH'
                 value = 'COVEREDRATIO'
-                minimum = 0.85
+                minimum = 0.80
             }
         }
 
@@ -105,3 +110,19 @@ checkstyle {
     maxWarnings = 0
     maxErrors = 0
 }
+
+task testsWithFileDatabase(type: Test) {
+    systemProperty 'spring.profiles.active', 'file'
+}
+
+task testsWithMemoryDatabase(type: Test) {
+    systemProperty 'spring.profiles.active', 'memory'
+}
+
+task testsWithSqlDatabase(type: Test) {
+    systemProperty 'spring.profiles.active', 'sql'
+}
+
+check.dependsOn testsWithFileDatabase
+check.dependsOn testsWithMemoryDatabase
+//check.dependsOn testsWithSqlDatabase
