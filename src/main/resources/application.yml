@@ -1,6 +1,8 @@
 spring:
   profiles:
-    active: sql
+    active: file
+  flyway:
+    enabled: false
 
 logging:
   level:
