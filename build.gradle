@@ -10,6 +10,7 @@ buildscript {
         springFoxUiVersion = '3.0.0'
         postgresqlVersion = '42.2.19'
         flywayVersion = '7.12.0'
+        h2databaseVersion = '1.4.200'
     }
 }
 
@@ -38,7 +39,10 @@ dependencies {
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
     testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-    runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
+
+    runtimeOnly( "org.postgresql:postgresql:${postgresqlVersion}",
+                 "com.h2database:h2:${h2databaseVersion}"
+    )
 
     implementation(
 
