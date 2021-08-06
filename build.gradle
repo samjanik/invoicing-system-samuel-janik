@@ -115,18 +115,24 @@ checkstyle {
     maxErrors = 0
 }
 
-task testsWithFileDatabase(type: Test) {
+task testWithFileDatabase (type: Test) {
+    group 'verification'
+    description 'Run tests using File Based Database'
     systemProperty 'spring.profiles.active', 'file'
 }
 
-task testsWithMemoryDatabase(type: Test) {
+task testWithMemoryDatabase(type: Test) {
+    group 'verification'
+    description 'Run tests using In Memory Database'
     systemProperty 'spring.profiles.active', 'memory'
 }
 
-task testsWithSqlDatabase(type: Test) {
+task testWithSqlDatabase(type: Test) {
+    group 'verification'
+    description 'Run tests using SQL Database'
     systemProperty 'spring.profiles.active', 'sql'
 }
 
-check.dependsOn testsWithFileDatabase
-check.dependsOn testsWithMemoryDatabase
-//check.dependsOn testsWithSqlDatabase
+check.dependsOn testWithFileDatabase
+check.dependsOn testWithMemoryDatabase
+//check.dependsOn testWithSqlDatabase

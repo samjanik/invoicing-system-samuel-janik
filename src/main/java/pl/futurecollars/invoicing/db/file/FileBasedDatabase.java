@@ -87,6 +87,6 @@ public class FileBasedDatabase implements Database {
     }
 
     public boolean containsId(int id, String line) {
-        return line.contains("\"id\":" + id + ",");
+        return line.contains("\"id\":" + id + ",\"number\"");
     }
 }
