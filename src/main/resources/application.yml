@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: h2
+    active: sql-h2
   flyway:
     enabled: false
 
