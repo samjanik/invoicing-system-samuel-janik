@@ -28,9 +28,9 @@ class InvoiceControllerStepwiseTest extends Specification {
     @Autowired
     private JsonService jsonService
 
-    private Invoice originalInvoice = TestHelpers.invoice(1)
+    private final Invoice originalInvoice = TestHelpers.invoice(1)
 
-    private LocalDate updatedDate = LocalDate.of(2021, 07, 29)
+    private final LocalDate updatedDate = LocalDate.of(2021, 07, 29)
 
     private static final String ENDPOINT = "/invoices"
 

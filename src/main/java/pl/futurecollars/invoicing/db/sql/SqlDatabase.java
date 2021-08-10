@@ -22,12 +22,14 @@ import pl.futurecollars.invoicing.model.Vat;
 @RequiredArgsConstructor
 public class SqlDatabase implements Database {
 
-    private final static String SELECT_QUERY = "select i.id, i.date, i.number, "
+    private static final String SELECT_QUERY = "select i.id, i.date, i.number, "
+        + "c1.id as seller_id, "
         + "c1.name as seller_name, "
         + "c1.tax_identification_number as seller_tax_id, "
         + "c1.address as seller_address, "
         + "c1.pension_insurance as seller_pension_insurance, "
         + "c1.health_insurance as seller_health_insurance, "
+        + "c2.id as buyer_id, "
         + "c2.name as buyer_name, "
         + "c2.tax_identification_number as buyer_tax_id, "
         + "c2.address as buyer_address, "
@@ -193,6 +195,7 @@ public class SqlDatabase implements Database {
                 .date(rs.getDate("date").toLocalDate())
                 .number(rs.getString("number"))
                 .buyer(Company.builder()
+                    .id(rs.getInt("buyer_id"))
                     .taxIdentificationNumber(rs.getString("buyer_tax_id"))
                     .name(rs.getString("buyer_name"))
                     .address(rs.getString("buyer_address"))
@@ -201,6 +204,7 @@ public class SqlDatabase implements Database {
                     .build()
                 )
                 .seller(Company.builder()
+                    .id(rs.getInt("seller_id"))
                     .taxIdentificationNumber(rs.getString("seller_tax_id"))
                     .name(rs.getString("seller_name"))
                     .address(rs.getString("seller_address"))
