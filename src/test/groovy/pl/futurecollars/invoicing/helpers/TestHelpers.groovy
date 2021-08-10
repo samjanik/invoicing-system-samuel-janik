@@ -32,9 +32,10 @@ class TestHelpers {
     static invoice(int id) {
         Invoice.builder()
                 .date(LocalDate.now())
+                .number("FAV/18/R/063128/08/21/FCJ")
                 .buyer(company(id + 10))
                 .seller(company(id))
-                .entries((1..id).collect( {product(it)} ))
+                .entries((1..id).collect({ product(it) }))
                 .build()
     }
 }

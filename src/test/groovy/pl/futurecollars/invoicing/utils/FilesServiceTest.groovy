@@ -9,8 +9,8 @@ import java.nio.file.StandardOpenOption
 
 class FilesServiceTest extends Specification {
 
-    private Path invoicesDbpath = File.createTempFile('lines', '.json').toPath()
-    private FilesService filesService = new FilesService();
+    private final Path invoicesDbpath = File.createTempFile('lines', '.json').toPath()
+    private final FilesService filesService = new FilesService();
 
     def "lines are correctly read from file given an example invoice"() {
         given:

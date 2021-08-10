@@ -54,7 +54,7 @@ class AbstractControllerTest extends Specification {
         (1..count).collect { id ->
             def invoice = invoice(id)
             invoice.id = addInvoiceAndReturnId(invoice)
-            return invoice
+            invoice
         }
     }
 
