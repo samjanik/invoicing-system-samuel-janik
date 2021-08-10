@@ -95,7 +95,7 @@ class InvoiceControllerIntegrationTest extends AbstractControllerTest {
         def id = addInvoiceAndReturnId(invoice(44))
         def updatedInvoice = invoice(123)
         updatedInvoice.id = id
-        updatedInvoice.issueDate = updatedDate
+        updatedInvoice.date = updatedDate
 
         expect:
         mockMvc.perform(
