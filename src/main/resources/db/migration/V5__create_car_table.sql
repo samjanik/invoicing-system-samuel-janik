@@ -5,6 +5,3 @@ CREATE TABLE public.car
     personal_expense boolean                  NOT NULL   DEFAULT false,
     PRIMARY KEY (id)
 );
-
-ALTER TABLE public.car
-    OWNER to postgres;
