@@ -35,11 +35,11 @@ abstract class AbstractDatabaseTest extends Specification {
 
     def "get all returns all invoices in the database, deleted invoice is not returned"() {
         given:
-        invoices.forEach{ database.save(it) }
+        invoices.forEach{it.id = database.save(it) }
 
         expect:
         database.getAll().size() == invoices.size()
-        database.getAll().forEach{ assert resetIds(it) == invoices.get(it.getId() - 1) }
+        database.getAll().forEach{ assert resetIds(it).toString() == invoices.get(it.getId() - 1).toString() }
 
         when:
         database.delete(1)
@@ -83,7 +83,7 @@ abstract class AbstractDatabaseTest extends Specification {
         resetIds(result.get()) == originalInvoice
     }
 
-    private static Invoice resetIds(Invoice invoice) {
+    Invoice resetIds(Invoice invoice) {
         invoice.getBuyer().id = 0
         invoice.getSeller().id = 0
         invoice
