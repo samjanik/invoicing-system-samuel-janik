@@ -119,17 +119,10 @@ public class SqlDatabase implements Database {
                         + "seller) "
                         + "values (?, ?, ?, ?);",
                     new String[] {"id"});
-            ps.setDate(1,
-                Date.valueOf(
-                    invoice
-                        .getDate()));
-            ps.setString(2,
-                invoice
-                    .getNumber());
-            ps.setInt(3,
-                buyerId);
-            ps.setInt(4,
-                sellerId);
+            ps.setDate(1, Date.valueOf(invoice.getDate()));
+            ps.setString(2, invoice.getNumber());
+            ps.setInt(3, buyerId);
+            ps.setInt(4, sellerId);
             return ps;
         }, keyHolder);
 
@@ -287,18 +280,12 @@ public class SqlDatabase implements Database {
                             + "car_expense) "
                             + "values (?, ?, ?, ?, ?, ?);",
                         new String[] {"id"});
-                ps.setString(1,
-                    entry.getDescription());
-                ps.setInt(2,
-                    entry.getQuantity());
-                ps.setBigDecimal(3,
-                    entry.getNetPrice());
-                ps.setBigDecimal(4,
-                    entry.getVatValue());
-                ps.setInt(5,
-                    vatToId.get(entry.getVatRate()));
-                ps.setObject(6,
-                    insertCarAndGetId(entry.getCarExpense()));
+                ps.setString(1, entry.getDescription());
+                ps.setInt(2, entry.getQuantity());
+                ps.setBigDecimal(3, entry.getNetPrice());
+                ps.setBigDecimal(4, entry.getVatValue());
+                ps.setInt(5, vatToId.get(entry.getVatRate()));
+                ps.setObject(6, insertCarAndGetId(entry.getCarExpense()));
                 return ps;
             }, keyHolder);
 
