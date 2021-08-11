@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: sql-pg
+    active: sql
   flyway:
     enabled: false
 

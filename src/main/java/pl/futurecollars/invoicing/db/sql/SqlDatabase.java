@@ -126,9 +126,9 @@ public class SqlDatabase implements Database {
             ps.setString(2,
                 invoice
                     .getNumber());
-            ps.setLong(3,
+            ps.setInt(3,
                 buyerId);
-            ps.setLong(4,
+            ps.setInt(4,
                 sellerId);
             return ps;
         }, keyHolder);
@@ -246,10 +246,10 @@ public class SqlDatabase implements Database {
         deleteEntriesAndCarsRelatedToInvoice(id);
         addEntriesRelatedToInvoice(id, updatedInvoice);
 
-        return originalInvoice;
+        return Optional.of(updatedInvoice);
     }
 
-    private void updateCompany(Company buyer, Company buyer2) {
+    private void updateCompany(Company updatedCompany, Company originalCompany) {
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                 "update company "
@@ -260,12 +260,12 @@ public class SqlDatabase implements Database {
                     + "pension_insurance=? "
                     + "where id=?"
             );
-            ps.setString(1, buyer.getName());
-            ps.setString(2, buyer.getAddress());
-            ps.setString(3, buyer.getTaxIdentificationNumber());
-            ps.setBigDecimal(4, buyer.getHealthInsurance());
-            ps.setBigDecimal(5, buyer.getPensionInsurance());
-            ps.setInt(6, buyer2.getId());
+            ps.setString(1, updatedCompany.getName());
+            ps.setString(2, updatedCompany.getAddress());
+            ps.setString(3, updatedCompany.getTaxIdentificationNumber());
+            ps.setBigDecimal(4, updatedCompany.getHealthInsurance());
+            ps.setBigDecimal(5, updatedCompany.getPensionInsurance());
+            ps.setInt(6, originalCompany.getId());
             return ps;
         });
     }

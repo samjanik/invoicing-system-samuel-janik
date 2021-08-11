@@ -1,5 +1,6 @@
 package pl.futurecollars.invoicing.helpers
 
+import pl.futurecollars.invoicing.model.Car
 import pl.futurecollars.invoicing.model.Company
 import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.model.InvoiceEntry
@@ -26,13 +27,19 @@ class TestHelpers {
                 .netPrice(BigDecimal.valueOf(id * 1000).setScale(2))
                 .vatValue(BigDecimal.valueOf(id * 1000 * 0.08).setScale(2))
                 .vatRate(Vat.VAT_8)
+                .carExpense(id % 2 == 0 ? null :
+                        Car.builder()
+                                .registrationNumber("XYZ")
+                                .privateExpense(false)
+                                .build()
+                )
                 .build()
     }
 
     static invoice(int id) {
         Invoice.builder()
                 .date(LocalDate.now())
-                .number("FAV/18/R/063128/08/21/FCJ")
+                .number("FAV/18/R/063128/08/21/$id")
                 .buyer(company(id + 10))
                 .seller(company(id))
                 .entries((1..id).collect({ product(it) }))

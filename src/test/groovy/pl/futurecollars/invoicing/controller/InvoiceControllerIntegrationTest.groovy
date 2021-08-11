@@ -90,7 +90,7 @@ class InvoiceControllerIntegrationTest extends AbstractControllerTest {
         id << [-100, -2, -1, 12, 13, 99, 102, 1000]
     }
 
-    def "invoice date can be modified"() {
+    def "invoice can be modified"() {
 
         def id = addInvoiceAndReturnId(invoice(44))
         def updatedInvoice = invoice(123)
