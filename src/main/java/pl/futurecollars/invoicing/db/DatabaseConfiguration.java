@@ -63,6 +63,7 @@ public class DatabaseConfiguration {
     @Bean
     @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "sql")
     public Database sqlDatabase(JdbcTemplate jdbcTemplate) {
+        log.debug("Creating sql database");
         return new SqlDatabase(jdbcTemplate);
     }
 }
