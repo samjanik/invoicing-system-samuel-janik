@@ -10,7 +10,7 @@ public class IdService {
     private final Path idFilePath;
     private final FilesService filesService;
 
-    private int nextId = 1;
+    private long nextId = 1;
 
     public IdService(Path idFilePath, FilesService filesService) {
         this.idFilePath = idFilePath;
@@ -36,7 +36,7 @@ public class IdService {
         }
     }
 
-    public int getNextIdAndIncrement() {
+    public long getNextIdAndIncrement() {
         printIDtoTracker();
         return nextId++;
     }

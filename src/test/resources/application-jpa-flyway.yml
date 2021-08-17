@@ -1,17 +1,17 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:db-jpa;DB_CLOSE_DELAY=-1
+    url: jdbc:h2:mem:db-jpa-flyway;DB_CLOSE_DELAY=-1
     username: sa
     password: sa
     driver-class-name: org.h2.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQL94Dialect
   flyway:
-    enabled: false
+    enabled: true
 
 invoicing-system:
   database: jpa

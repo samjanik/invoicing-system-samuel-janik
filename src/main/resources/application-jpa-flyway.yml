@@ -1,20 +1,20 @@
 server:
-  port: 9999
+  port: 3333
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/invoicing-jpa
+    url: jdbc:postgresql://localhost:5432/invoicing-jpa-flyway
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQL94Dialect
   flyway:
-    enabled: false
+    enabled: true
 
 invoicing-system:
   database: jpa
