@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import pl.futurecollars.invoicing.model.Invoice;
 
 @Repository
-public interface InvoiceRepository extends CrudRepository<Invoice, Integer> {
+public interface InvoiceRepository extends CrudRepository<Invoice, Long> {
 }

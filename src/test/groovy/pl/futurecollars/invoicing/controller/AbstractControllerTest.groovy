@@ -37,7 +37,7 @@ class AbstractControllerTest extends Specification {
         getAllInvoices().each { invoice -> deleteInvoice(invoice.id) }
     }
 
-    int addInvoiceAndReturnId(Invoice invoice) {
+    long addInvoiceAndReturnId(Invoice invoice) {
 
         def invoiceId = mockMvc.perform(
                 post(INVOICE_ENDPOINT)
@@ -50,7 +50,7 @@ class AbstractControllerTest extends Specification {
         Integer.valueOf(invoiceId)
     }
 
-    List<Invoice> addUniqueInvoices(int count) {
+    List<Invoice> addUniqueInvoices(long count) {
         (1..count).collect { id ->
             def invoice = invoice(id)
             invoice.id = addInvoiceAndReturnId(invoice)
@@ -69,7 +69,7 @@ class AbstractControllerTest extends Specification {
         return jsonService.stringToObject(response, Invoice[])
     }
 
-    Invoice getInvoiceById(int id) {
+    Invoice getInvoiceById(long id) {
         def invoiceAsString = mockMvc.perform(get("$INVOICE_ENDPOINT/$id")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -80,12 +80,12 @@ class AbstractControllerTest extends Specification {
         jsonService.stringToObject(invoiceAsString, Invoice)
     }
 
-    ResultActions deleteInvoice(int id) {
+    ResultActions deleteInvoice(long id) {
         mockMvc.perform(delete("$INVOICE_ENDPOINT/$id"))
                 .andExpect(status().isOk())
     }
 
-    String invoiceAsJson(int id) {
+    String invoiceAsJson(long id) {
         def testCaseInvoice = invoice(id)
         testCaseInvoice.id = id
         jsonService.objectToString(testCaseInvoice)

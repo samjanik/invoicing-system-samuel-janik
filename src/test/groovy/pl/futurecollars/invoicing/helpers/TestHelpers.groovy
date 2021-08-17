@@ -10,7 +10,7 @@ import java.time.LocalDate
 
 class TestHelpers {
 
-    static company(int id) {
+    static company(long id) {
         Company.builder()
                 .taxIdentificationNumber("$id")
                 .address("ul. Bukowińska 24d/$id 02-703 Warszawa, Polska")
@@ -20,10 +20,10 @@ class TestHelpers {
                 .build()
     }
 
-    static product(int id) {
+    static product(long id) {
         InvoiceEntry.builder()
                 .description("Programming course $id")
-                .quantity(1)
+                .quantity(1.5)
                 .netPrice(BigDecimal.valueOf(id * 1000).setScale(2))
                 .vatValue(BigDecimal.valueOf(id * 1000 * 0.08).setScale(2))
                 .vatRate(Vat.VAT_8)
@@ -36,7 +36,7 @@ class TestHelpers {
                 .build()
     }
 
-    static invoice(int id) {
+    static invoice(long id) {
         Invoice.builder()
                 .date(LocalDate.now())
                 .number("FAV/18/R/063128/08/21/$id")

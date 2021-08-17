@@ -10,11 +10,11 @@ import pl.futurecollars.invoicing.model.Invoice;
 
 public class InMemoryDatabase implements Database {
 
-    public int nextId = 1;
-    private final Map<Integer, Invoice> invoices = new HashMap<>();
+    public long nextId = 1;
+    private final Map<Long, Invoice> invoices = new HashMap<>();
 
     @Override
-    public int save(Invoice invoice) {
+    public long save(Invoice invoice) {
 
         invoice.setId(nextId);
         invoices.put(nextId, invoice);
@@ -23,7 +23,7 @@ public class InMemoryDatabase implements Database {
     }
 
     @Override
-    public Optional<Invoice> getById(int id) {
+    public Optional<Invoice> getById(long id) {
         return Optional.ofNullable(invoices.get(id));
     }
 
@@ -33,13 +33,13 @@ public class InMemoryDatabase implements Database {
     }
 
     @Override
-    public Optional<Invoice> update(int id, Invoice updatedInvoice) {
+    public Optional<Invoice> update(long id, Invoice updatedInvoice) {
         updatedInvoice.setId(id);
         return Optional.ofNullable(invoices.put(id, updatedInvoice));
     }
 
     @Override
-    public Optional<Invoice> delete(int id) {
+    public Optional<Invoice> delete(long id) {
         return Optional.ofNullable(invoices.remove(id));
     }
 }

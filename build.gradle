@@ -146,10 +146,17 @@ task testWithJpaDatabase(type: Test) {
     systemProperty 'spring.profiles.active', 'jpa'
 }
 
+task testWithJpaFlywayDatabase(type: Test) {
+    group 'verification'
+    description 'Run tests using H2 JPA Flyway Database'
+    systemProperty 'spring.profiles.active', 'jpa-flyway'
+}
+
 check.dependsOn testWithFileDatabase
 check.dependsOn testWithMemoryDatabase
 check.dependsOn testWithSqlDatabase
 check.dependsOn testWithJpaDatabase
+check.dependsOn testWithJpaFlywayDatabase
 
 String osName = System.getProperty("os.name").toLowerCase()
 if (osName.contains("windows")) {
