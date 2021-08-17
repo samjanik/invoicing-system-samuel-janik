@@ -140,9 +140,16 @@ task testWithSqlDatabase(type: Test) {
     systemProperty 'spring.profiles.active', 'sql'
 }
 
+task testWithJpaDatabase(type: Test) {
+    group 'verification'
+    description 'Run tests using H2 JPA Database'
+    systemProperty 'spring.profiles.active', 'jpa'
+}
+
 check.dependsOn testWithFileDatabase
 check.dependsOn testWithMemoryDatabase
 check.dependsOn testWithSqlDatabase
+check.dependsOn testWithJpaDatabase
 
 String osName = System.getProperty("os.name").toLowerCase()
 if (osName.contains("windows")) {
