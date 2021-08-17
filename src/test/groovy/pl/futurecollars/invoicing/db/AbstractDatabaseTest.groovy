@@ -8,9 +8,14 @@ import static pl.futurecollars.invoicing.helpers.TestHelpers.invoice
 abstract class AbstractDatabaseTest extends Specification {
 
     List<Invoice> invoices = (1..12).collect { invoice(it) }
-    Database database = getDatabaseInstance()
 
     abstract Database getDatabaseInstance()
+
+    Database database
+
+    def setup() {
+        database = getDatabaseInstance()
+    }
 
     def "should save invoices returning sequential id, invoice should have id set to correct value, get by id returns saved invoice"() {
         when:
@@ -20,7 +25,10 @@ abstract class AbstractDatabaseTest extends Specification {
         ids == (1..invoices.size()).collect()
         ids.forEach{ assert database.getById(it).isPresent() }
         ids.forEach{ assert database.getById(it).get().getId() == it }
-        ids.forEach{ assert resetIds(database.getById(it).get()) == invoices.get(it - 1) }
+        ids.forEach{
+            def expectedInvoice = resetIds(invoices.get(it - 1))
+            def databaseInvoice = resetIds(database.getById(it).get())
+            assert expectedInvoice.toString() == databaseInvoice.toString() }
     }
 
     def "get by id returns empty optional when there is no invoice with given id"() {
@@ -84,8 +92,8 @@ abstract class AbstractDatabaseTest extends Specification {
     }
 
     Invoice resetIds(Invoice invoice) {
-        invoice.getBuyer().id = 0
-        invoice.getSeller().id = 0
+        invoice.getBuyer().id = null
+        invoice.getSeller().id = null
         invoice
     }
 }
