@@ -51,7 +51,7 @@ public class SqlDatabase implements Database {
                 .prepareStatement(
                     "insert into car ("
                         + "registration_number, "
-                        + "personal_expense) "
+                        + "private_expense) "
                         + "values (?, ?);",
                     new String[] {"id"});
             ps.setString(1,
@@ -161,7 +161,7 @@ public class SqlDatabase implements Database {
                     .carExpense(response.getObject("registration_number") != null
                         ? Car.builder()
                         .registrationNumber(response.getString("registration_number"))
-                        .privateExpense(response.getBoolean("personal_expense"))
+                        .privateExpense(response.getBoolean("private_expense"))
                         .build()
                         : null)
                     .build());
