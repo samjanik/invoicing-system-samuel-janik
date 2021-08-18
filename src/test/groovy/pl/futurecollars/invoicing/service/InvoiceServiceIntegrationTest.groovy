@@ -24,10 +24,10 @@ class InvoiceServiceIntegrationTest extends Specification {
         def ids = invoices.collect{ service.save(it) }
 
         then:
-        ids == (1..invoices.size()).collect()
+        ids == (1L..invoices.size()).collect()
         ids.forEach{ assert service.getById(it).isPresent() }
         ids.forEach{ assert service.getById(it).get().getId() == it }
-        ids.forEach{ assert service.getById(it).get() == invoices.get(it - 1) }
+        ids.forEach{ assert service.getById(it).get() == invoices.get( (int) it - 1) }
     }
 
     def "get by id returns empty optional when there is no invoice with given id"() {
@@ -42,18 +42,18 @@ class InvoiceServiceIntegrationTest extends Specification {
 
     def "get all returns all invoices in the database, deleted invoice is not returned"() {
         given:
-        invoices.forEach{ service.save(it) }
+        invoices.forEach{it.id = service.save(it) }
 
         expect:
         service.getAll().size() == invoices.size()
-        service.getAll().forEach{ assert it == invoices.get(it.getId() - 1) }
+        service.getAll().forEach{ assert it == invoices.get( (int) it.getId() - 1) }
 
         when:
         service.delete(1)
 
         then:
         service.getAll().size() == invoices.size() - 1
-        service.getAll().forEach{ assert it == invoices.get(it.getId() - 1) }
+        service.getAll().forEach{ assert it == invoices.get( (int) it.getId() - 1) }
         service.getAll().forEach{ assert it.getId() != 1 }
     }
 

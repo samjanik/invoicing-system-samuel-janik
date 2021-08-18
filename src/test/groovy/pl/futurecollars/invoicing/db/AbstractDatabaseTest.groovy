@@ -47,15 +47,21 @@ abstract class AbstractDatabaseTest extends Specification {
 
         expect:
         database.getAll().size() == invoices.size()
-        database.getAll().forEach{ assert resetIds(it).toString() == invoices.get(it.getId() - 1).toString() }
+        database.getAll().eachWithIndex{invoice, index ->
+            def invoiceAsString = resetIds(invoice).toString()
+            def expectedInvoiceAsString = invoices.get(index).toString()
+            assert invoiceAsString == expectedInvoiceAsString
+        }
 
         when:
-        database.delete(1)
+        def firstInvoiceId = database.getAll().get(0).getId()
+        database.delete(firstInvoiceId)
 
         then:
         database.getAll().size() == invoices.size() - 1
-        database.getAll().forEach{ assert resetIds(it) == invoices.get(it.getId() - 1) }
-        database.getAll().forEach{ assert it.getId() != 1 }
+        database.getAll().eachWithIndex{ invoice, index ->
+            assert resetIds(invoice).toString() == invoices.get(index + 1).toString() }
+        database.getAll().forEach{ assert it.getId() != firstInvoiceId }
     }
 
     def "can delete all invoices"() {
@@ -79,14 +85,14 @@ abstract class AbstractDatabaseTest extends Specification {
         def originalInvoice = invoices.get(1)
         originalInvoice.id = database.save(originalInvoice)
 
-        def expectedInvoice = invoices.get(originalInvoice.id)
+        def expectedInvoice = invoices.get((int) originalInvoice.id)
         expectedInvoice.id = originalInvoice.id
 
         when:
         def result = database.update(originalInvoice.id, expectedInvoice)
 
         then:
-        def updatedInvoice = database.getById(originalInvoice.id).get()
+        def updatedInvoice = database.getById( (int) originalInvoice.id).get()
         resetIds(updatedInvoice) == expectedInvoice
         resetIds(result.get()) == originalInvoice
     }

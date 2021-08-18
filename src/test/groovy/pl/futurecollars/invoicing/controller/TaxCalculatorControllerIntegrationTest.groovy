@@ -112,7 +112,6 @@ class TaxCalculatorControllerIntegrationTest extends AbstractControllerTest {
 
     def "tax is calculated correctly when car is used for personal purposes"() {
 
-        addInvoiceAndReturnId(invoice)
         given:
         def invoice = Invoice.builder()
                 .date(LocalDate.now())
@@ -134,6 +133,8 @@ class TaxCalculatorControllerIntegrationTest extends AbstractControllerTest {
                                 .build()
                 ))
                 .build()
+
+        addInvoiceAndReturnId(invoice)
 
         when:
         def taxCalculatorResponse = calculateTax(invoice.getSeller())
