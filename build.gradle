@@ -11,6 +11,7 @@ buildscript {
         postgresqlVersion = '42.2.19'
         flywayVersion = '7.12.0'
         h2databaseVersion = '1.4.200'
+        mongoVersion = '3.12.8'
     }
 }
 
@@ -54,7 +55,8 @@ dependencies {
             "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}",
             "io.springfox:springfox-boot-starter:${springFoxStarterVersion}",
             "io.springfox:springfox-swagger-ui:${springFoxUiVersion}",
-            "org.flywaydb:flyway-core:${flywayVersion}"
+            "org.flywaydb:flyway-core:${flywayVersion}",
+            "org.mongodb:mongo-java-driver:${mongoVersion}"
     )
 
     testImplementation(
