@@ -82,10 +82,12 @@ test {
 }
 
 jacocoTestReport {
-    dependsOn test
+    executionData tasks.withType(Test)
+    dependsOn check
 }
 
 jacocoTestCoverageVerification {
+    executionData tasks.withType(Test)
     violationRules {
         rule {
             limit {
@@ -154,11 +156,18 @@ task testWithJpaFlywayDatabase(type: Test) {
     systemProperty 'spring.profiles.active', 'jpa-flyway'
 }
 
+task testWithMongoDatabase(type: Test) {
+    group 'verification'
+    description 'Run tests using Mongo Database'
+    systemProperty 'spring.profiles.active', 'mongo'
+}
+
 check.dependsOn testWithFileDatabase
 check.dependsOn testWithMemoryDatabase
 check.dependsOn testWithSqlDatabase
 check.dependsOn testWithJpaDatabase
 check.dependsOn testWithJpaFlywayDatabase
+check.dependsOn testWithMongoDatabase
 
 String osName = System.getProperty("os.name").toLowerCase()
 if (osName.contains("windows")) {
