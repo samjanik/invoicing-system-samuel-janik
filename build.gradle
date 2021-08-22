@@ -68,21 +68,23 @@ dependencies {
 }
 
 jacoco {
-    toolVersion = "0.8.6"
+    toolVersion = "0.8.7"
 }
 
 tasks.named('test') {
-    // Use junit platform for unit tests.
     useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
 }
 
-test {
+check {
     finalizedBy jacocoTestReport
     finalizedBy jacocoTestCoverageVerification
 }
 
 jacocoTestReport {
-    dependsOn test
+    dependsOn check
 }
 
 jacocoTestCoverageVerification {
