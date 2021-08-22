@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: mongo
+    active: jpa
   flyway:
     enabled: false
 
