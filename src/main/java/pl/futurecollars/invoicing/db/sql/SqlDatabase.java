@@ -17,7 +17,7 @@ import pl.futurecollars.invoicing.model.InvoiceEntry;
 import pl.futurecollars.invoicing.model.Vat;
 
 @RequiredArgsConstructor
-public class SqlDatabase implements Database {
+public class SqlDatabase implements Database<Invoice> {
 
     private static final String SELECT_QUERY = "select i.id, i.date, i.number, "
         + "c1.id as seller_id, "

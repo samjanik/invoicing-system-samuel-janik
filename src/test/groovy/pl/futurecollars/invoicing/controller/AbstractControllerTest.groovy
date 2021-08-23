@@ -8,7 +8,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import pl.futurecollars.invoicing.model.Company
 import pl.futurecollars.invoicing.model.Invoice
-import pl.futurecollars.invoicing.service.TaxCalculatorResults
+import pl.futurecollars.invoicing.service.tax.TaxCalculatorResults
 import pl.futurecollars.invoicing.utils.JsonService
 import spock.lang.Specification
 
