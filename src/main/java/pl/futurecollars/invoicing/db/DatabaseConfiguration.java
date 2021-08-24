@@ -55,19 +55,38 @@ public class DatabaseConfiguration {
 
     @Bean
     @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "file")
-    public Database fileBasedDatabase(IdService idService,
-                                      FilesService filesService,
-                                      JsonService jsonService,
-                                      @Value("${invoicing-system.database.prefix}") String filePrefix,
-                                      @Value("${invoicing-system.database.invoices.file}") String invoicesFile
+    public Database<Invoice> invoiceFileBasedDatabase(
+        IdService idService,
+        FilesService filesService,
+        JsonService jsonService,
+        @Value("${invoicing-system.database.prefix}") String filePrefix,
+        @Value("${invoicing-system.database.invoices.file}") String invoicesFile
     ) {
         try {
             databaseFilePath = Files.createTempFile(filePrefix, invoicesFile);
         } catch (IOException e) {
             throw new RuntimeException("Failed to initiate invoices database", e);
         }
-        log.debug("Creating file-based database: " + databaseFilePath.toString());
-        return new FileBasedDatabase(databaseFilePath, idService, filesService, jsonService);
+        log.debug("Creating file-based invoices database: " + databaseFilePath.toString());
+        return new FileBasedDatabase(databaseFilePath, idService, filesService, jsonService, Invoice.class);
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "file")
+    public Database<Company> companyFileBasedDatabase(
+        IdService idService,
+        FilesService filesService,
+        JsonService jsonService,
+        @Value("${invoicing-system.database.prefix}") String filePrefix,
+        @Value("${invoicing-system.database.companies.file}") String companiesFile
+    ) {
+        try {
+            databaseFilePath = Files.createTempFile(filePrefix, companiesFile);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to initiate companies database", e);
+        }
+        log.debug("Creating file-based companies database: " + databaseFilePath.toString());
+        return new FileBasedDatabase(databaseFilePath, idService, filesService, jsonService, Company.class);
     }
 
     @Bean
@@ -78,6 +97,7 @@ public class DatabaseConfiguration {
     }
 
     @Bean
+    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "memory")
     public Database<Company> companyInMemoryDatabase() {
         log.debug("Creating company in-memory database");
         return new InMemoryDatabase();
@@ -114,7 +134,7 @@ public class DatabaseConfiguration {
     @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "mongo")
     public MongoIdProvider mongoIdProvider(
         @Value("${invoicing-system.database.counter.collection}") String collectionName,
-                           MongoDatabase mongoDatabase) {
+        MongoDatabase mongoDatabase) {
 
         MongoCollection<Document> collection = mongoDatabase.getCollection(collectionName);
 

@@ -6,3 +6,4 @@ invoicing-system:
   database.prefix: db
   database.invoices.file: invoices.json
   database.id.file: id.txt
+  database.companies.file: companies.json
