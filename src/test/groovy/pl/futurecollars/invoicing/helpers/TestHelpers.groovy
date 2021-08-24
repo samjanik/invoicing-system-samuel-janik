@@ -29,7 +29,7 @@ class TestHelpers {
                 .vatRate(Vat.VAT_8)
                 .carExpense(id % 2 == 0 ? null :
                         Car.builder()
-                                .registrationNumber("XYZ")
+                                .registrationNumber("WM 10944")
                                 .privateExpense(false)
                                 .build()
                 )
@@ -44,5 +44,11 @@ class TestHelpers {
                 .seller(company(id))
                 .entries((1..id).collect({ product(it) }))
                 .build()
+    }
+
+    static Invoice resetIds(Invoice invoice) {
+        invoice.getBuyer().id = null
+        invoice.getSeller().id = null
+        invoice
     }
 }
