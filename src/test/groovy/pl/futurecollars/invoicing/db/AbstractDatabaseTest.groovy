@@ -4,6 +4,7 @@ import pl.futurecollars.invoicing.model.Invoice
 import spock.lang.Specification
 
 import static pl.futurecollars.invoicing.helpers.TestHelpers.invoice
+import static pl.futurecollars.invoicing.helpers.TestHelpers.resetIds
 
 abstract class AbstractDatabaseTest extends Specification {
 
@@ -97,9 +98,4 @@ abstract class AbstractDatabaseTest extends Specification {
         resetIds(result.get()) == originalInvoice
     }
 
-    Invoice resetIds(Invoice invoice) {
-        invoice.getBuyer().id = null
-        invoice.getSeller().id = null
-        invoice
-    }
 }
