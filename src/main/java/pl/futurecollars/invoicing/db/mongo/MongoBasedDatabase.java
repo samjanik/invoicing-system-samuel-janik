@@ -7,42 +7,42 @@ import lombok.RequiredArgsConstructor;
 import org.bson.Document;
 import org.springframework.data.util.Streamable;
 import pl.futurecollars.invoicing.db.Database;
-import pl.futurecollars.invoicing.model.Invoice;
+import pl.futurecollars.invoicing.db.WithId;
 
 @RequiredArgsConstructor
-public class MongoBasedDatabase implements Database<Invoice> {
+public class MongoBasedDatabase<T extends WithId> implements Database<T> {
 
-    private final MongoCollection<Invoice> invoices;
+    private final MongoCollection<T> items;
     private final MongoIdProvider idProvider;
 
     @Override
-    public long save(Invoice invoice) {
-        invoice.setId(idProvider.getNextIdAndIncrement());
-        invoices.insertOne(invoice);
-        return invoice.getId();
+    public long save(T item) {
+        item.setId(idProvider.getNextIdAndIncrement());
+        items.insertOne(item);
+        return item.getId();
     }
 
     @Override
-    public Optional<Invoice> getById(long id) {
-        return Optional.ofNullable(invoices.find(idFilter(id)).first());
+    public Optional<T> getById(long id) {
+        return Optional.ofNullable(items.find(idFilter(id)).first());
     }
 
     @Override
-    public List<Invoice> getAll() {
-        return Streamable.of(invoices.find()).toList();
+    public List<T> getAll() {
+        return Streamable.of(items.find()).toList();
     }
 
     @Override
-    public Optional<Invoice> update(long id, Invoice updatedInvoice) {
-        updatedInvoice.setId(id);
-        invoices.findOneAndReplace(idFilter(id), updatedInvoice);
-        Invoice updatedDocument = invoices.find(idFilter(id)).first();
+    public Optional<T> update(long id, T updatedItem) {
+        updatedItem.setId(id);
+        items.findOneAndReplace(idFilter(id), updatedItem);
+        T updatedDocument = items.find(idFilter(id)).first();
         return Optional.ofNullable(updatedDocument);
     }
 
     @Override
-    public Optional<Invoice> delete(long id) {
-        Invoice deletedDocument = invoices.findOneAndDelete(idFilter(id));
+    public Optional<T> delete(long id) {
+        T deletedDocument = items.findOneAndDelete(idFilter(id));
         return Optional.ofNullable(deletedDocument);
     }
 

@@ -69,7 +69,7 @@ public class DatabaseConfiguration {
             throw new RuntimeException("Failed to initiate invoices database", e);
         }
         log.debug("Creating file-based invoices database: " + databaseFilePath.toString());
-        return new FileBasedDatabase(databaseFilePath, idService, filesService, jsonService, Invoice.class);
+        return new FileBasedDatabase<>(databaseFilePath, idService, filesService, jsonService, Invoice.class);
     }
 
     @Bean
@@ -87,26 +87,26 @@ public class DatabaseConfiguration {
             throw new RuntimeException("Failed to initiate companies database", e);
         }
         log.debug("Creating file-based companies database: " + databaseFilePath.toString());
-        return new FileBasedDatabase(databaseFilePath, idService, filesService, jsonService, Company.class);
+        return new FileBasedDatabase<>(databaseFilePath, idService, filesService, jsonService, Company.class);
     }
 
     @Bean
     @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "memory")
     public Database<Invoice> invoiceInMemoryDatabase() {
         log.debug("Creating invoice in-memory database");
-        return new InMemoryDatabase();
+        return new InMemoryDatabase<>();
     }
 
     @Bean
     @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "memory")
     public Database<Company> companyInMemoryDatabase() {
         log.debug("Creating company in-memory database");
-        return new InMemoryDatabase();
+        return new InMemoryDatabase<>();
     }
 
     @Bean
     @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "sql")
-    public Database sqlDatabase(JdbcTemplate jdbcTemplate) {
+    public Database<Invoice> sqlDatabase(JdbcTemplate jdbcTemplate) {
         log.debug("Creating sql database");
         return new SqlDatabase(jdbcTemplate);
     }
@@ -115,27 +115,38 @@ public class DatabaseConfiguration {
     @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "jpa")
     public Database<Invoice> invoicejpaDatabase(InvoiceRepository repository) {
         log.debug("Creating invoice jpa database");
-        return new JpaDatabase(repository);
+        return new JpaDatabase<>(repository);
     }
 
     @Bean
     @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "jpa")
     public Database<Company> companyjpaDatabase(CompanyRepository repository) {
         log.debug("Creating company jpa database");
-        return new JpaDatabase(repository);
+        return new JpaDatabase<>(repository);
     }
 
     @Bean
     @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "mongo")
-    public Database mongoBasedDatabase(
-
-        @Value("${invoicing-system.database.collection.name}") String collectionName,
+    public Database<Invoice> invoiceMongoBasedDatabase(
+        @Value("${invoicing-system.database.invoice.collection}") String collectionName,
         MongoDatabase mongoDatabase,
         MongoIdProvider mongoIdProvider) {
 
         MongoCollection<Invoice> collection = mongoDatabase.getCollection(collectionName, Invoice.class);
 
-        return new MongoBasedDatabase(collection, mongoIdProvider);
+        return new MongoBasedDatabase<>(collection, mongoIdProvider);
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "mongo")
+    public Database<Company> companyMongoBasedDatabase(
+        @Value("${invoicing-system.database.company.collection}") String collectionName,
+        MongoDatabase mongoDatabase,
+        MongoIdProvider mongoIdProvider) {
+
+        MongoCollection<Company> collection = mongoDatabase.getCollection(collectionName, Company.class);
+
+        return new MongoBasedDatabase<>(collection, mongoIdProvider);
     }
 
     @Bean
