@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: file
+    active: jpa
   flyway:
     enabled: false
 
