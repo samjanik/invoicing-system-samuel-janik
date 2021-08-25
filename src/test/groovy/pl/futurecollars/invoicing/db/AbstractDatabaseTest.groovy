@@ -94,7 +94,7 @@ abstract class AbstractDatabaseTest extends Specification {
 
         then:
         def updatedInvoice = database.getById( (int) originalInvoice.id).get()
-        resetIds(updatedInvoice) == expectedInvoice
+        resetIds(updatedInvoice) == resetIds(expectedInvoice)
         resetIds(result.get()) == originalInvoice
     }
 
