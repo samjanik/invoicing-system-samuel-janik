@@ -19,6 +19,7 @@ import java.time.LocalDate
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import static pl.futurecollars.invoicing.helpers.TestHelpers.resetIds
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -99,7 +100,7 @@ class InvoiceControllerStepwiseTest extends Specification {
 
         then:
         invoices.size() == 1
-        invoices[0] == expectedInvoice
+        resetIds(invoices[0]) == resetIds(expectedInvoice)
     }
 
     def "invoice is returned correctly when getting by id"() {
@@ -119,7 +120,7 @@ class InvoiceControllerStepwiseTest extends Specification {
         def invoice = jsonService.stringToObject(response, Invoice)
 
         then:
-        invoice == expectedInvoice
+        resetIds(invoice) == resetIds(expectedInvoice)
     }
 
     def "invoice date can be modified"() {
@@ -157,7 +158,7 @@ class InvoiceControllerStepwiseTest extends Specification {
         def invoice = jsonService.stringToObject(response, Invoice)
 
         then:
-        invoice == expectedInvoice
+        resetIds(invoice) == resetIds(expectedInvoice)
     }
 
     def "invoice can be deleted"() {

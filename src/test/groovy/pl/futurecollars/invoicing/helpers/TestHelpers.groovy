@@ -51,4 +51,8 @@ class TestHelpers {
         invoice.getSeller().id = null
         invoice
     }
+
+    static List<Invoice> resetIds(List<Invoice> invoices) {
+        invoices.forEach { invoice -> resetIds(invoice) }
+    }
 }
