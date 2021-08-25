@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: sql
+    active: memory
   flyway:
     enabled: false
 
