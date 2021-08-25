@@ -28,7 +28,8 @@ import pl.futurecollars.invoicing.db.jpa.JpaDatabase;
 import pl.futurecollars.invoicing.db.memory.InMemoryDatabase;
 import pl.futurecollars.invoicing.db.mongo.MongoBasedDatabase;
 import pl.futurecollars.invoicing.db.mongo.MongoIdProvider;
-import pl.futurecollars.invoicing.db.sql.SqlDatabase;
+import pl.futurecollars.invoicing.db.sql.CompanySqlDatabase;
+import pl.futurecollars.invoicing.db.sql.InvoiceSqlDatabase;
 import pl.futurecollars.invoicing.model.Company;
 import pl.futurecollars.invoicing.model.Invoice;
 import pl.futurecollars.invoicing.utils.FilesService;
@@ -106,9 +107,16 @@ public class DatabaseConfiguration {
 
     @Bean
     @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "sql")
-    public Database<Invoice> sqlDatabase(JdbcTemplate jdbcTemplate) {
-        log.debug("Creating sql database");
-        return new SqlDatabase(jdbcTemplate);
+    public Database<Invoice> invoiceSqlDatabase(JdbcTemplate jdbcTemplate) {
+        log.debug("Creating invoice sql database");
+        return new InvoiceSqlDatabase(jdbcTemplate);
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "sql")
+    public Database<Company> companySqlDatabase(JdbcTemplate jdbcTemplate) {
+        log.debug("Creating company sql database");
+        return new CompanySqlDatabase(jdbcTemplate);
     }
 
     @Bean
@@ -133,7 +141,7 @@ public class DatabaseConfiguration {
         MongoIdProvider mongoIdProvider) {
 
         MongoCollection<Invoice> collection = mongoDatabase.getCollection(collectionName, Invoice.class);
-
+        log.debug("Creating invoice mongo database");
         return new MongoBasedDatabase<>(collection, mongoIdProvider);
     }
 
@@ -145,7 +153,7 @@ public class DatabaseConfiguration {
         MongoIdProvider mongoIdProvider) {
 
         MongoCollection<Company> collection = mongoDatabase.getCollection(collectionName, Company.class);
-
+        log.debug("Creating company mongo database");
         return new MongoBasedDatabase<>(collection, mongoIdProvider);
     }
 

@@ -4,7 +4,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -16,8 +15,7 @@ import pl.futurecollars.invoicing.model.Invoice;
 import pl.futurecollars.invoicing.model.InvoiceEntry;
 import pl.futurecollars.invoicing.model.Vat;
 
-@RequiredArgsConstructor
-public class SqlDatabase implements Database<Invoice> {
+public class InvoiceSqlDatabase extends AbstractSqlDatabase implements Database<Invoice> {
 
     private static final String SELECT_QUERY = "select i.id, i.date, i.number, "
         + "c1.id as seller_id, "
@@ -36,7 +34,9 @@ public class SqlDatabase implements Database<Invoice> {
         + "inner join company c1 on i.seller = c1.id "
         + "inner join company c2 on i.buyer = c2.id ";
 
-    private final JdbcTemplate jdbcTemplate;
+    public InvoiceSqlDatabase(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate);
+    }
 
     private Integer insertCarAndGetId(Car car) {
 
@@ -58,31 +58,6 @@ public class SqlDatabase implements Database<Invoice> {
                 car.getRegistrationNumber());
             ps.setBoolean(2,
                 car.isPrivateExpense());
-            return ps;
-        }, keyHolder);
-
-        return keyHolder.getKey().intValue();
-    }
-
-    private int insertCompany(Company company) {
-
-        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                "insert into company ("
-                    + "name, "
-                    + "address, "
-                    + "tax_identification_number, "
-                    + "pension_insurance, "
-                    + "health_insurance) "
-                    + "values (?, ?, ?, ?, ?);",
-                new String[] {"id"});
-            ps.setString(1, company.getName());
-            ps.setString(2, company.getAddress());
-            ps.setString(3, company.getTaxIdentificationNumber());
-            ps.setBigDecimal(4, company.getPensionInsurance());
-            ps.setBigDecimal(5, company.getHealthInsurance());
             return ps;
         }, keyHolder);
 
@@ -202,8 +177,11 @@ public class SqlDatabase implements Database<Invoice> {
             return originalInvoice;
         }
 
-        updateCompany(updatedInvoice.getBuyer(), originalInvoice.get().getBuyer());
-        updateCompany(updatedInvoice.getSeller(), originalInvoice.get().getSeller());
+        updatedInvoice.getBuyer().setId(originalInvoice.get().getBuyer().getId());
+        updateCompany(updatedInvoice.getBuyer());
+
+        updatedInvoice.getSeller().setId(originalInvoice.get().getSeller().getId());
+        updateCompany(updatedInvoice.getSeller());
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps =
@@ -223,27 +201,6 @@ public class SqlDatabase implements Database<Invoice> {
         addEntriesRelatedToInvoice(id, updatedInvoice);
 
         return Optional.of(updatedInvoice);
-    }
-
-    private void updateCompany(Company updatedCompany, Company originalCompany) {
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                "update company "
-                    + "set name=?, "
-                    + "address=?, "
-                    + "tax_identification_number=?, "
-                    + "health_insurance=?, "
-                    + "pension_insurance=? "
-                    + "where id=?"
-            );
-            ps.setString(1, updatedCompany.getName());
-            ps.setString(2, updatedCompany.getAddress());
-            ps.setString(3, updatedCompany.getTaxIdentificationNumber());
-            ps.setBigDecimal(4, updatedCompany.getHealthInsurance());
-            ps.setBigDecimal(5, updatedCompany.getPensionInsurance());
-            ps.setLong(6, originalCompany.getId());
-            return ps;
-        });
     }
 
     private void addEntriesRelatedToInvoice(long invoiceId, Invoice invoice) {
