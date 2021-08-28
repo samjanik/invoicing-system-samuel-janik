@@ -82,10 +82,12 @@ check {
 }
 
 jacocoTestReport {
+    executionData tasks.withType(Test)
     dependsOn check
 }
 
 jacocoTestCoverageVerification {
+    executionData tasks.withType(Test)
     violationRules {
         rule {
             limit {
