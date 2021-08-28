@@ -12,7 +12,7 @@ import pl.futurecollars.invoicing.model.Invoice
 class MongoDatabaseIntegrationTest extends AbstractDatabaseTest {
 
     @Autowired
-    private MongoBasedDatabase<Invoice> mongoDatabase
+    private Database<Invoice> mongoDatabase
 
     @Override
     Database getDatabaseInstance() {
