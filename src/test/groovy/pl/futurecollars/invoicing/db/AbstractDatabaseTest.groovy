@@ -16,6 +16,8 @@ abstract class AbstractDatabaseTest extends Specification {
 
     def setup() {
         database = getDatabaseInstance()
+        database.reset()
+        assert database.getAll().isEmpty()
     }
 
     def "should save invoices returning sequential id, invoice should have id set to correct value, get by id returns saved invoice"() {
@@ -50,7 +52,7 @@ abstract class AbstractDatabaseTest extends Specification {
         database.getAll().size() == invoices.size()
         database.getAll().eachWithIndex{invoice, index ->
             def invoiceAsString = resetIds(invoice).toString()
-            def expectedInvoiceAsString = invoices.get(index).toString()
+            def expectedInvoiceAsString = resetIds(invoices.get(index)).toString()
             assert invoiceAsString == expectedInvoiceAsString
         }
 
@@ -61,7 +63,7 @@ abstract class AbstractDatabaseTest extends Specification {
         then:
         database.getAll().size() == invoices.size() - 1
         database.getAll().eachWithIndex{ invoice, index ->
-            assert resetIds(invoice).toString() == invoices.get(index + 1).toString() }
+            assert resetIds(invoice).toString() == resetIds(invoices.get(index + 1)).toString() }
         database.getAll().forEach{ assert it.getId() != firstInvoiceId }
     }
 
@@ -94,8 +96,14 @@ abstract class AbstractDatabaseTest extends Specification {
 
         then:
         def updatedInvoice = database.getById( (int) originalInvoice.id).get()
-        resetIds(updatedInvoice) == resetIds(expectedInvoice)
-        resetIds(result.get()) == originalInvoice
+        def updatedInvoiceAsString = resetIds(updatedInvoice).toString()
+        def expectedInvoiceAsString = resetIds(expectedInvoice).toString()
+        updatedInvoiceAsString == expectedInvoiceAsString
+
+        and:
+        def invoiceAsString = resetIds(result.get()).toString()
+        def originalInvoiceAsString = resetIds(originalInvoice).toString()
+        invoiceAsString == originalInvoiceAsString
     }
 
 }
