@@ -88,7 +88,7 @@ abstract class AbstractDatabaseTest extends Specification {
         def originalInvoice = invoices.get(1)
         originalInvoice.id = database.save(originalInvoice)
 
-        def expectedInvoice = invoices.get((int) originalInvoice.id)
+        def expectedInvoice = invoices.get(1)
         expectedInvoice.id = originalInvoice.id
 
         when:
