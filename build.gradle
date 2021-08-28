@@ -132,12 +132,6 @@ task testWithMemoryDatabase(type: Test) {
     systemProperty 'spring.profiles.active', 'memory'
 }
 
-task testWithPostgresSqlDatabase(type: Test) {
-    group 'verification'
-    description 'Run tests using Postgres SQL Database'
-    systemProperty 'spring.profiles.active', 'sql-pg'
-}
-
 task testWithSqlDatabase(type: Test) {
     group 'verification'
     description 'Run tests using H2 SQL Database'
@@ -171,5 +165,11 @@ check.dependsOn testWithMongoDatabase
 
 String osName = System.getProperty("os.name").toLowerCase()
 if (osName.contains("windows")) {
+    task testWithPostgresSqlDatabase(type: Test) {
+        group 'verification'
+        description 'Run tests using Postgres SQL Database'
+        systemProperty 'spring.profiles.active', 'sql-pg'
+    }
+
     check.dependsOn testWithPostgresSqlDatabase
 }
