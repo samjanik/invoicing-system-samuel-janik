@@ -23,6 +23,34 @@ const loadCompanies = async () => {
   });
 }
 
+const serializeFormToJson = form => JSON.stringify(
+  Array.from(new FormData(form).entries())
+      .reduce((m, [key, value]) =>
+          Object.assign(m, {[key]: value}), {})
+);
+
+function handleAddCompanyFormSubmit() {
+  const form = $("#addCompanyForm");
+  form.on('submit', function (e) {
+      e.preventDefault();
+
+      $.ajax({
+          url: 'companies',
+          type: 'post',
+          contentType: 'application/json',
+          data: serializeFormToJson(this),
+          success: function (data) {
+              $("#companiesTable").find("tr:gt(0)").remove();
+              loadCompanies()
+          },
+          error: function (jqXhr, textStatus, errorThrown) {
+              alert(errorThrown)
+          }
+      });
+  });
+}
+
 window.onload = function () {
-loadCompanies();
+    loadCompanies();
+    handleAddCompanyFormSubmit()
 }
