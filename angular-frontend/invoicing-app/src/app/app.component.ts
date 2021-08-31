@@ -23,16 +23,16 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
       this.companiesService.getCompanies()
           .subscribe(companies => {
-              this.companies = this.companies;
+              this.companies = companies;
           });
   }
 
   addCompany() {
       this.companiesService.addCompany(this.newCompany)
           .subscribe(id => {
-              this.newCompany.id = id;  
+              this.newCompany.id = id;
               this.companies.push(this.newCompany);
-              
+
               this.newCompany = new Company(0, "", "", "", 0, 0);
             });
   }
@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
       this.companiesService.deleteCompany(companyToDelete.id)
           .subscribe(() => {
               this.companies = this.companies.filter(company => company !== companyToDelete);
-          });  
+          });
   }
 
   triggerUpdate(company: Company) {
