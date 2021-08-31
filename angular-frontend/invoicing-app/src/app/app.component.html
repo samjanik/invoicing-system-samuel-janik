@@ -1,7 +1,7 @@
 <div class="toolbar" role="banner">
 
-  <h3>{{title}}</h3>
-  <h1> Companies </h1>
+  <h1>{{title}}</h1>
+  <h4> Companies </h4>
   <table id="companiesTable" class="table table-striped">
     <tr>
       <th>Tax Identification Number</th>
@@ -10,22 +10,6 @@
       <th>Pension Insurance</th>
       <th>Health Insurance</th>
       <th>Action</th>
-    </tr>
-    <tr *ngFor="let company of companies">
-      <td>{{company.taxIdentificationNumber}}</td>
-      <td>{{company.address}}</td>
-      <td>{{company.name}}</td>
-      <td>{{company.pensionInsurance}}</td>
-      <td>{{company.healthInsurance}}</td>
-      <th><button (click)="deleteCompany" class="btn btn-danger">Delete</button></th>
-    </tr>
-    <tr>
-      <td><input [(ngModel)]="newCompany.taxIdentificationNumber" type="text" class="form-control" name="taxIdentificationNumber"></td>
-      <td><input [(ngModel)]="newCompany.address" type="text" class="form-control" name="address"></td>
-      <td><input [(ngModel)]="newCompany.name" type="text" class="form-control" name="name"></td>
-      <td><input [(ngModel)]="newCompany.healthInsurance" type="text" class="form-control" name="healthInsurance"></td>
-      <td><input [(ngModel)]="newCompany.pensionInsurance" type="text" class="form-control" name="pensionInsurance"></td>
-      <td><input (click)="addCompany()" type="button" class="btn btn-primary" value="Add Company"></td>
     </tr>
     <tr *ngFor="let company of companies">
       <td *ngIf="!company.editMode">{{company.taxIdentificationNumber}}</td>
@@ -37,20 +21,29 @@
       <td *ngIf="!company.editMode">{{company.name}}</td>
       <td *ngIf="company.editMode"><input [(ngModel)]="company.editedCompany.name" type="text" class="form-control" name="name"></td>
 
-      <td *ngIf="!company.editMode">{{company.pensionInsurance}}</td>
-      <td *ngIf="company.editMode"><input [(ngModel)]="company.editedCompany.pensionInsurance" type="text" class="form-control" name="pensionInsurance"></td>
-
       <td *ngIf="!company.editMode">{{company.healthInsurance}}</td>
       <td *ngIf="company.editMode"><input [(ngModel)]="company.editedCompany.healthInsurance" type="text" class="form-control" name="healthInsurance"></td>
+
+      <td *ngIf="!company.editMode">{{company.pensionInsurance}}</td>
+      <td *ngIf="company.editMode"><input [(ngModel)]="company.editedCompany.pensionInsurance" type="text" class="form-control" name="pensionInsurance"></td>
 
       <td>
         <button *ngIf="!company.editMode" (click)="deleteCompany(company)" class="btn btn-danger">Delete</button>
         <span *ngIf="!company.editMode">&nbsp;</span>
         <button *ngIf="!company.editMode" (click)="triggerUpdate(company)" class="btn btn-secondary">Edit</button>
+
         <button *ngIf="company.editMode" (click)="updateCompany(company)" class="btn =btn-primary">Update company</button>
         <span *ngIf="company.editMode">&nbsp;</span>
-        <button *ngIf="company.editMode" (click)="cancelCompanyUpdate"(company) class="btn btn-secondary">Cancel</button>
+        <button *ngIf="company.editMode" (click)="cancelCompanyUpdate(company)" class="btn btn-secondary">Cancel</button>
       </td>
+    </tr>
+    <tr>
+      <td><input [(ngModel)]="newCompany.taxIdentificationNumber" type="text" class="form-control" name="taxIdentificationNumber"></td>
+      <td><input [(ngModel)]="newCompany.address" type="text" class="form-control" name="address"></td>
+      <td><input [(ngModel)]="newCompany.name" type="text" class="form-control" name="name"></td>
+      <td><input [(ngModel)]="newCompany.healthInsurance" type="text" class="form-control" name="healthInsurance"></td>
+      <td><input [(ngModel)]="newCompany.pensionInsurance" type="text" class="form-control" name="pensionInsurance"></td>
+      <td><input (click)="addCompany()" type="button" class="btn btn-primary" value="Add Company"></td>
     </tr>
   </table>
 </div>

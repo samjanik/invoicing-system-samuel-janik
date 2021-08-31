@@ -9,22 +9,22 @@ import { Company } from './model/company';
 export class AppComponent {
 
   title = 'Invoicing Application';
-  
+
   companies: Company[] = [
-    new Company(
-        "123-3",
-        "krakow",
-        "Google",
-        123,
-        344
-    ),
-    new Company(
-        "444-3",
-        "Warsaw",
-        "Gogs",
-        333,
-        444
-    )
+      new Company(
+          "123-3",
+          "krakow",
+          "Google",
+          123,
+          344
+      ),
+      new Company(
+          "444-3",
+          "Warsaw",
+          "Gogs",
+          333,
+          444
+      )
   ];
 
   newCompany: Company = new Company("", "", "", 0, 0);
