@@ -48,8 +48,8 @@ export class AppComponent implements OnInit {
       company.editedCompany = new Company(
           company.id,
           company.taxIdentificationNumber,
-          company.address,
           company.name,
+          company.address,
           company.healthInsurance,
           company.pensionInsurance
       )
@@ -64,8 +64,8 @@ export class AppComponent implements OnInit {
       this.companiesService.editCompany(updatedCompany.editedCompany)
           .subscribe(() => {
               updatedCompany.taxIdentificationNumber = updatedCompany.editedCompany.taxIdentificationNumber
-              updatedCompany.address = updatedCompany.editedCompany.address
               updatedCompany.name = updatedCompany.editedCompany.name
+              updatedCompany.address = updatedCompany.editedCompany.address
               updatedCompany.healthInsurance = updatedCompany.editedCompany.healthInsurance
               updatedCompany.pensionInsurance = updatedCompany.editedCompany.pensionInsurance
 

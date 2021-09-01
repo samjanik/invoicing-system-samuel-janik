@@ -4,22 +4,22 @@
   <h4> Companies </h4>
   <table id="companiesTable" class="table table-striped">
     <tr>
-      <th>Tax Identification Number</th>
-      <th>Address</th>
-      <th>Name</th>
-      <th>Pension Insurance</th>
-      <th>Health Insurance</th>
+      <th id='taxIdHeader'>Tax Identification Number</th>
+      <th id='nameHeader'>Name</th>
+      <th id='addressHeader'>Address</th>
+      <th id='pensionInsuranceHeader'>Pension Insurance</th>
+      <th id='healthInsuranceHeader'>Health Insurance</th>
       <th>Action</th>
     </tr>
     <tr *ngFor="let company of companies">
       <td *ngIf="!company.editMode">{{company.taxIdentificationNumber}}</td>
       <td *ngIf="company.editMode"><input [(ngModel)]="company.editedCompany.taxIdentificationNumber" type="text" class="form-control" name="taxIdentificationNumber"></td>
 
-      <td *ngIf="!company.editMode">{{company.address}}</td>
-      <td *ngIf="company.editMode"><input [(ngModel)]="company.editedCompany.address" type="text" class="form-control" name="address"></td>
-
       <td *ngIf="!company.editMode">{{company.name}}</td>
       <td *ngIf="company.editMode"><input [(ngModel)]="company.editedCompany.name" type="text" class="form-control" name="name"></td>
+
+      <td *ngIf="!company.editMode">{{company.address}}</td>
+      <td *ngIf="company.editMode"><input [(ngModel)]="company.editedCompany.address" type="text" class="form-control" name="address"></td>
 
       <td *ngIf="!company.editMode">{{company.healthInsurance}}</td>
       <td *ngIf="company.editMode"><input [(ngModel)]="company.editedCompany.healthInsurance" type="text" class="form-control" name="healthInsurance"></td>
@@ -39,8 +39,8 @@
     </tr>
     <tr>
       <td><input [(ngModel)]="newCompany.taxIdentificationNumber" type="text" class="form-control" name="taxIdentificationNumber"></td>
-      <td><input [(ngModel)]="newCompany.address" type="text" class="form-control" name="address"></td>
       <td><input [(ngModel)]="newCompany.name" type="text" class="form-control" name="name"></td>
+      <td><input [(ngModel)]="newCompany.address" type="text" class="form-control" name="address"></td>
       <td><input [(ngModel)]="newCompany.healthInsurance" type="text" class="form-control" name="healthInsurance"></td>
       <td><input [(ngModel)]="newCompany.pensionInsurance" type="text" class="form-control" name="pensionInsurance"></td>
       <td><input (click)="addCompany()" type="button" class="btn btn-primary" value="Add Company" id="createCompanyButton"></td>
