@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { AppComponent } from './app.component';
@@ -6,7 +6,12 @@ import { Company } from './model/company';
 import { CompanyService } from './service/company.service';
 
 describe('AppComponent', () => {
+
+  let fixture: ComponentFixture<AppComponent>;
+  let app: AppComponent;
+
   beforeEach(async () => {
+
     await TestBed.configureTestingModule({
       providers: [
         { provide: CompanyService, useClass: MockCompanyService }
@@ -18,51 +23,41 @@ describe('AppComponent', () => {
         FormsModule
       ]
     }).compileComponents();
+
+    fixture = TestBed.createComponent(AppComponent);
+    app = fixture.componentInstance;
+        
+    app.ngOnInit()
+    fixture.detectChanges();
+
   });
 
   it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
 
   it(`should have as title 'Invoicing Application'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-
-    const app = fixture.componentInstance;
     expect(app.title).toEqual('Invoicing Application');
   });
 
   it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-
-    const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('div.toolbar').textContent).toContain('Invoicing Application app is running!');
+    const mainPage = fixture.nativeElement;
+    expect(mainPage.querySelector('div.toolbar').textContent).toContain('Invoicing Application app is running!');
   });
 
   it('should display list of companies', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    app.ngOnInit();
-    fixture.detectChanges();
 
     const mainPage = fixture.nativeElement;
 
-    expect(mainPage.textContent).toContain("111WarszawaAgora111333")
-    expect(mainPage.textContent).toContain("222krakowDell555666.08")
+    expect(mainPage.textContent).toContain("111AgoraWarszawa111333")
+    expect(mainPage.textContent).toContain("222DellKraków555666.08")
 
     expect(app.companies.length).toBe(2)
     expect(app.companies).toBe(MockCompanyService.companies)
 
-
   });
 
   it('newly added company is added to the list', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    app.ngOnInit();
-    fixture.detectChanges();
 
     const mainPage = fixture.nativeElement;
     
@@ -88,7 +83,7 @@ describe('AppComponent', () => {
 
     fixture.detectChanges();
 
-    expect(mainPage.innerText).toContain("333-333-33-33	ul. Third 3	Third Ltd.	0	0")
+    expect(mainPage.innerText).toContain("333-333-33-33	Third Ltd.	ul. Third 3	0	0")
     expect(app.companies.length).toBe(4);
 
   });
@@ -108,7 +103,7 @@ class MockCompanyService {
       2,
       "222",
       "Dell",
-      "krakow",
+      "Kraków",
       555,
       666.08
     )
