@@ -1,16 +1,16 @@
-import { AppPage } from './app.po';
+import { CompanyPage } from './company.po';
 import { browser, logging } from 'protractor';
 
-describe('workspace-project App', () => {
-  let page: AppPage;
+describe('Company page E2E test', () => {
+  let page: CompanyPage;
 
   beforeEach(() => {
-    page = new AppPage();
+    page = new CompanyPage();
   });
 
   it('should display welcome message', async () => {
     await page.navigateTo();
-    expect(await page.getTitleText()).toEqual('invoicing-app app is running!');
+    expect(await page.taxIdHeaderValue()).toEqual('Tax Identification Number');
   });
 
   afterEach(async () => {
