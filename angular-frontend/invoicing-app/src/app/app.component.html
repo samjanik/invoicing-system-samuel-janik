@@ -12,6 +12,7 @@
       <th>Action</th>
     </tr>
     <tr class="companyRow" *ngFor="let company of companies">
+      
       <td *ngIf="!company.editMode" id="taxId">{{company.taxIdentificationNumber}}</td>
       <td *ngIf="company.editMode"><input [(ngModel)]="company.editedCompany.taxIdentificationNumber" type="text" class="form-control" name="taxIdentificationNumber"></td>
 
@@ -32,7 +33,7 @@
         <span *ngIf="!company.editMode">&nbsp;</span>
         <button *ngIf="!company.editMode" (click)="deleteCompany(company)" class="btn btn-danger">Delete</button>
 
-        <button *ngIf="company.editMode" (click)="updateCompany(company)" class="btn btn-primary">Update company</button>
+        <button *ngIf="company.editMode" (click)="updateCompany(company)" class="btn btn-primary" id="updateCompanyButton">Update company</button>
         <span *ngIf="company.editMode">&nbsp;</span>
         <button *ngIf="company.editMode" (click)="cancelCompanyUpdate(company)" class="btn btn-secondary">Cancel</button>
       </td>

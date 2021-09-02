@@ -59,8 +59,13 @@ it('can update company', async () => {
 
   await page.companyRows().then(async rows => {
       const companyRow = new CompanyRow(rows[0]);
+      await companyRow.assertRowValues("123", "123 Inc.", "123 Wall Street", "1234", "123")
       await companyRow.updateCompany("456", "456 Inc.", "456 Wall Street", 5678, 567)
       await companyRow.assertRowValues("456", "456 Inc.", "456 Wall Street", "5678", "567")
+
+      await page.companyRows().then(async rowsAfterUpdate =>{
+          await new CompanyRow(rowsAfterUpdate[0]).assertRowValues("456", "456 Inc.", "456 Wall Street", "5678", "567")
+      })
   })
 });
 
