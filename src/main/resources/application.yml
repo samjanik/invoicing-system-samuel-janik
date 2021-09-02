@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: memory
+    active: file
   flyway:
     enabled: false
 

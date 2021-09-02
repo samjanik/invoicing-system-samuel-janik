@@ -11,7 +11,7 @@
       <th id='healthInsuranceHeader'>Health Insurance</th>
       <th>Action</th>
     </tr>
-    <tr *ngFor="let company of companies">
+    <tr class="companyRow" *ngFor="let company of companies">
       <td *ngIf="!company.editMode">{{company.taxIdentificationNumber}}</td>
       <td *ngIf="company.editMode"><input [(ngModel)]="company.editedCompany.taxIdentificationNumber" type="text" class="form-control" name="taxIdentificationNumber"></td>
 
