@@ -1,6 +1,7 @@
 import { browser, by, element, ElementArrayFinder, ElementFinder, WebElement } from 'protractor';
 
 export class CompanyPage {
+
   async navigateTo(): Promise<unknown> {
     return browser.get(browser.baseUrl);
   }
@@ -37,14 +38,38 @@ export class CompanyPage {
     return row.element(by.css('.btn-danger'))
 }
 
-  async addNewCompany(taxId: string, name: string, address: string, pensionInsurance: number, healthInsurance: number) {
-    await element(by.css('input[name=taxIdentificationNumber]')).sendKeys(taxId)
-    await element(by.css('input[name=name]')).sendKeys(name)
-    await element(by.css('input[name=address]')).sendKeys(address)
-    await element(by.css('input[name=pensionInsurance]')).sendKeys(pensionInsurance)
-    await element(by.css('input[name=healthInsurance]')).sendKeys(healthInsurance)
-    await element(by.id("createCompanyButton")).click
-  }
+async addNewCompany(taxId: string, name: string, address: string, pensionInsurance: number, healthInsurance: number) {
+  await this.taxIdInput().sendKeys(taxId)
+  await this.nameInput().sendKeys(name)
+  await this.addressInput().sendKeys(address)
 
+  await this.pensionInsuranceInput().clear()
+  await this.pensionInsuranceInput().sendKeys(pensionInsurance)
+
+  await this.healthInsuranceInput().clear()
+  await this.healthInsuranceInput().sendKeys(healthInsurance)
+
+  await element(by.id("createCompanyButton")).click()
+}
+
+private addressInput() {
+  return element(by.css('input[name=address]'));
+}
+
+private nameInput() {
+  return element(by.css('input[name=name]'));
+}
+
+private taxIdInput() {
+  return element(by.css('input[name=taxIdentificationNumber]'));
+}
+
+private healthInsuranceInput() {
+  return element(by.css('input[name=healthInsurance]'));
+}
+
+private pensionInsuranceInput() {
+  return element(by.css('input[name=pensionInsurance]'));
+}
 
 }
