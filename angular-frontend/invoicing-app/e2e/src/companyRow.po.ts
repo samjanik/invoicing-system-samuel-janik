@@ -5,13 +5,13 @@ export class CompanyRow {
     constructor(private companyRow: ElementFinder) {
     }
 
-     deleteButton(): WebElement {
+      deleteButton(): WebElement {
         return this.companyRow.element(by.css('.btn-danger'))
-     }
+      }
 
-     async taxIdValue(): Promise<string> {
+      async taxIdValue(): Promise<string> {
         return this.companyRow.element(by.id('taxId')).getText()
-     }
+      }
 
       async nameValue(): Promise<string> {
         return this.companyRow.element(by.id('name')).getText()
@@ -59,7 +59,7 @@ export class CompanyRow {
       }
 
       private confirmUpdateCompanyBtn() {
-        return this.companyRow.element(by.css('.btn-primary'));
+        return this.companyRow.element(by.id("updateCompanyButton"));
       }
 
       private updateHealthInsuranceInput() {
