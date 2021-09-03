@@ -8,6 +8,11 @@ spring:
       name: user
       password: password
 
+invoicing-system:
+  allowedOrigins: http://localhost:4200
+  csrf:
+    disable: true
+
 server:
   port: 8080
 
