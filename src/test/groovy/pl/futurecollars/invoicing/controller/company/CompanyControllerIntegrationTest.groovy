@@ -1,9 +1,11 @@
 package pl.futurecollars.invoicing.controller.company
 
 import org.springframework.http.MediaType
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors
 import pl.futurecollars.invoicing.controller.AbstractControllerTest
 import spock.lang.Unroll
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
@@ -71,6 +73,7 @@ class CompanyControllerIntegrationTest extends AbstractControllerTest {
         expect:
         mockMvc.perform(
                 delete("$COMPANY_ENDPOINT/$id")
+                .with(csrf())
         )
                 .andExpect(status().isNotFound())
 
@@ -87,6 +90,7 @@ class CompanyControllerIntegrationTest extends AbstractControllerTest {
                 put("$COMPANY_ENDPOINT/$id")
                         .content(companyAsJson(1))
                         .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
         )
                 .andExpect(status().isNotFound())
 
@@ -104,7 +108,8 @@ class CompanyControllerIntegrationTest extends AbstractControllerTest {
         mockMvc.perform(
                 put("$COMPANY_ENDPOINT/$id")
                         .content(jsonService.objectToString(updatedCompany))
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf()))
                 .andExpect(status().isOk())
 
         def companyFromDbAfterUpdate = getCompanyById(id).toString()

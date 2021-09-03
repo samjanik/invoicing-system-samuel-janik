@@ -6,6 +6,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.ApplicationContext
 import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors
 import org.springframework.test.web.servlet.MockMvc
 import pl.futurecollars.invoicing.helpers.TestHelpers
 import pl.futurecollars.invoicing.model.Invoice
@@ -16,11 +18,14 @@ import spock.lang.Specification
 import spock.lang.Stepwise
 
 import java.time.LocalDate
+
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static pl.futurecollars.invoicing.helpers.TestHelpers.resetIds
 
+@WithMockUser
 @AutoConfigureMockMvc
 @SpringBootTest
 @Stepwise
@@ -73,7 +78,8 @@ class InvoiceControllerStepwiseTest extends Specification {
         when:
         invoiceId = Integer.valueOf(mockMvc.perform(post(ENDPOINT)
                 .content(invoiceAsJson)
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn()
                 .response
@@ -135,7 +141,8 @@ class InvoiceControllerStepwiseTest extends Specification {
         expect:
         mockMvc.perform(put("$ENDPOINT/$modifiedInvoice.id")
                 .content(invoiceAsJson)
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(csrf()))
                 .andDo(print())
                 .andExpect(status().isOk())
     }
@@ -163,11 +170,11 @@ class InvoiceControllerStepwiseTest extends Specification {
 
     def "invoice can be deleted"() {
         expect:
-        mockMvc.perform(delete("$ENDPOINT/$invoiceId"))
+        mockMvc.perform(delete("$ENDPOINT/$invoiceId").with(csrf()))
                 .andExpect(status().isOk())
 
         and:
-        mockMvc.perform(delete("$ENDPOINT/$invoiceId"))
+        mockMvc.perform(delete("$ENDPOINT/$invoiceId").with(csrf()))
                 .andExpect(status().isNotFound())
 
         and:
