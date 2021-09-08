@@ -1,5 +1,5 @@
 const loadCompanies = async () => {
-  const response = await fetch('http://localhost:8888/companies');
+  const response = await fetch('/companies');
   const companies = await response.json();
 
   companies.forEach(company => {
